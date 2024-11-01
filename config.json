@@ -1,0 +1,23 @@
+{
+    "devID": ["912362420096344124"],
+    "debugMode": false,
+    "maintenance": false,
+    "webhookURL": "https://discord.com/api/webhooks/id/token",
+
+    "presence": [
+        "Créé avec soin par Arava",
+        "Discord bot template - DJS V14",
+        "Disponible sur GitHub!"
+    ],
+
+    "color": {
+        "error": "#ff0000",
+        "success": "#00ff00",
+        "warn": "#ffff00"
+    },
+    "emote": {
+        "error": "❎",
+        "success": "✅",
+        "warn": "⚠️"
+    }
+}

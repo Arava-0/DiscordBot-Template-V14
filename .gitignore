@@ -1,0 +1,15 @@
+# Dependency directory
+node_modules/
+
+# Logs files
+*.log
+*.zip
+
+# Build files
+package-lock.json
+
+# Environment file
+.env
+
+# Git files
+.gitignore
