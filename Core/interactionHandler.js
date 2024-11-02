@@ -37,7 +37,7 @@ module.exports = {
          * If the interaction is a command, the bot will execute it (if it exists).
          */
         if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
-            const command = client.commands.get(interaction.commandName);
+            const command = client.loader.commands.find(c => c.name === interaction.commandName);
 
             if (isNullOrUndefined(command))
                 return notDeveloppedYet(interaction);
