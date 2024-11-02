@@ -11,11 +11,10 @@ module.exports = {
     type: "event",
     once: false,
     /**
-     *
-     * @param {CommandInteraction} interaction
      * @param {Client} client
+     * @param {CommandInteraction} interaction
      */
-    async execute(interaction, client) {
+    async execute(client, interaction) {
         /**
          * Logs every interaction triggered by a user in the console.
          */
