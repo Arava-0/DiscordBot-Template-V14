@@ -8,17 +8,19 @@ function loadEvent(client, loadedFileEvent)
 	let success = true;
 
 	try {
-		const execute = (...args) => loadedFileEvent.execute(...args, client);
+		const execute = (...args) => loadedFileEvent.execute(client, ...args);
 
 		if (loadedFileEvent.once)
 			client.once(loadedFileEvent.name, execute);
 		else
 			client.on(loadedFileEvent.name, execute);
 
-		showInfo (
-			`- EVENT       LOADED`,
-			`Name: ${loadedFileEvent.name} | Type: ${loadedFileEvent.once ? "once" : "on"}`
-		);
+		client.loader.events.push(loadedFileEvent.name)
+		if (client.debugMode)
+			showInfo (
+				`- EVENT       LOADED`,
+				`Name: ${loadedFileEvent.name} | Type: ${loadedFileEvent.once ? "once" : "on"}`
+			);
 	} catch (err) {
 		success = false;
 		showError (
@@ -36,18 +38,24 @@ function loadCommand(client, loadedFileCommand)
 	let success = true;
 
 	try {
-		client.commands.set(loadedFileCommand.data.name, loadedFileCommand);
+		let cmd = loadedFileCommand.data;
 
-		if (loadedFileCommand.isOnPrivateGuild) {
-			showInfo (
-				`- COMMAND     LOADED`,
-				`Name: ${loadedFileCommand.data.name} | Type: ${loadedFileCommand.data.constructor.name} | Guild: ${loadedFileCommand.isOnPrivateGuild}`
-			);
-		} else {
-			showInfo (
-				`- COMMAND     LOADED`,
-				`Name: ${loadedFileCommand.data.name} | Type: ${loadedFileCommand.data.constructor.name}`
-			);
+		client.loader.commands.push({
+			name: cmd.name,
+			data: cmd,
+			isOnPrivateGuild: isNullOrUndefined(loadedFileCommand.isOnPrivateGuild) ? null : loadedFileCommand.isOnPrivateGuild,
+			cooldown: isNullOrUndefined(loadedFileCommand.cooldown) ? null : loadedFileCommand.cooldown,
+			noDeferred: isNullOrUndefined(loadedFileCommand.noDeferred) ? false : loadedFileCommand.noDeferred,
+			ephemeral: isNullOrUndefined(loadedFileCommand.ephemeral) ? false : loadedFileCommand.ephemeral,
+			execute: loadedFileCommand.execute,
+		})
+
+		if (client.debugMode) {
+			let debug = `Name: ${cmd.name} | Type: ${cmd.constructor.name}`;
+			if (loadedFileCommand.isOnPrivateGuild)
+				debug += ` | Guild: ${loadedFileCommand.isOnPrivateGuild}`;
+
+			showInfo (`- COMMAND     LOADED`, debug);
 		}
 	} catch (err) {
 		success = false;
@@ -61,68 +69,32 @@ function loadCommand(client, loadedFileCommand)
 	return (success);
 }
 
-function loadButtons(client, loadedFileButton)
+function loadItem(client, loadedFile)
 {
+	const type = loadedFile.type;
 	let success = true;
 
 	try {
-		client.buttons.set(loadedFileButton.id, loadedFileButton);
+		const pattern = new RegExp(loadedFile.id.replace(/{!}/g, '(.*?)'));
 
-		showInfo (
-			`- BUTTON      LOADED`,
-			`Name: ${loadedFileButton.id}`
-		);
+		client.loader[`${type}s`].push({
+			id: loadedFile.id,
+			pattern: pattern,
+			noDeferred: isNullOrUndefined(loadedFile.noDeferred) ? false : loadedFile.noDeferred,
+			ephemeral: isNullOrUndefined(loadedFile.ephemeral) ? false : loadedFile.ephemeral,
+			execute: loadedFile.execute,
+		});
+
+		if (client.debugMode)
+			showInfo (
+				`- ${type.toUpperCase()}${" ".repeat(12 - type.length)}LOADED`,
+				`Name: ${loadedFile.id}`
+			);
 	} catch (err) {
 		success = false;
 		showError (
-			`BUTTON FAILED TO LOAD`,
-			`Name: ${loadedFileButton.id} | ${err}`,
-			client.debugMode == true ? err.stack : null
-		);
-	}
-
-	return (success);
-}
-
-function loadSelectMenus(client, loadedFileSelectMenu)
-{
-	let success = true;
-
-	try {
-		client.selectMenus.set(loadedFileSelectMenu.id, loadedFileSelectMenu);
-
-		showInfo (
-			`- SELECT MENU LOADED`,
-			`Name: ${loadedFileSelectMenu.id}`
-		);
-	} catch (err) {
-		success = false;
-		showError (
-			`SELECT MENU FAILED TO LOAD`,
-			`Name: ${loadedFileSelectMenu.id} | ${err}`,
-			client.debugMode == true ? err.stack : null
-		);
-	}
-
-	return (success);
-}
-
-function loadModals(client, loadedFileModal)
-{
-	let success = true;
-
-	try {
-		client.modals.set(loadedFileModal.id, loadedFileModal);
-
-		showInfo (
-			`- MODAL       LOADED`,
-			`Name: ${loadedFileModal.id}`
-		);
-	} catch (err) {
-		success = false;
-		showError (
-			`MODAL FAILED TO LOAD`,
-			`Name: ${loadedFileModal.id} | ${err}`,
+			`${type.toUpperCase()} FAILED TO LOAD`,
+			`Name: ${loadedFile.id} | ${err}`,
 			client.debugMode == true ? err.stack : null
 		);
 	}
@@ -153,13 +125,9 @@ async function loadEverything(client)
 				loadCommand(client, loadedFile);
 				break;
 			case "button":
-				loadButtons(client, loadedFile);
-				break;
 			case "selectMenu":
-				loadSelectMenus(client, loadedFile);
-				break;
 			case "modal":
-				loadModals(client, loadedFile);
+				loadItem(client, loadedFile);
 				break;
 			default:
 				showError(
@@ -171,10 +139,15 @@ async function loadEverything(client)
 		}
 	});
 
+	showInfo(`LOADER`, `  > ${client.loader.events.length} events loaded`);
+	showInfo(`LOADER`, `  > ${client.loader.buttons.length} buttons loaded`);
+	showInfo(`LOADER`, `  > ${client.loader.selectMenus.length} select menus loaded`);
+	showInfo(`LOADER`, `  > ${client.loader.modals.length} modals loaded`);
+
 	let globalCommandArray = [];
 	let guildsCommandArray = {};
 
-	client.commands.forEach((command) => {
+	client.loader.commands.forEach((command) => {
 		if (!command.isOnPrivateGuild)
 			globalCommandArray.push(command.data.toJSON());
 		else {
@@ -187,7 +160,7 @@ async function loadEverything(client)
 	if (globalCommandArray.length == 0 && Object.keys(guildsCommandArray).length == 0) {
 		return showInfo(
 			`LOADER`,
-			`  Aucune commande n'a été chargée...`
+			`  > Aucune commande n'a été chargée...`
 		);
 	}
 
@@ -211,6 +184,15 @@ async function loadEverything(client)
 	await rest.put(
 		Routes.applicationCommands(client.user.id),
 		{ body: globalCommandArray }
+	);
+
+	showInfo(
+		`LOADER`,
+		`  > ${globalCommandArray.length} global commands loaded`
+	);
+	showInfo(
+		`LOADER`,
+		`  > ${Object.keys(guildsCommandArray).length} guilds commands loaded`
 	);
 }
 

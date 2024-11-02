@@ -1,14 +1,17 @@
-const { ActivityType, Collection } = require("discord.js");
+const { ActivityType } = require("discord.js");
 const { showInfo } = require("../Utils/customInformations");
 
 async function initClient(client)
 {
     client.cache = {};
 
-    client.commands = new Collection();
-    client.buttons = new Collection();
-    client.selectMenus = new Collection();
-    client.modals = new Collection();
+    client.loader = {
+        commands: [],
+        events: [],
+        buttons: [],
+        selectMenus: [],
+        modals: [],
+    };
 
     client.config = require('../../config.json');
     client.debugMode = client.config.debugMode;

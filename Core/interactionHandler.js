@@ -1,8 +1,10 @@
-const { CommandInteraction, Client } = require("discord.js");
+const { CommandInteraction, Client, ChannelType } = require("discord.js");
 
 const { notDeveloppedYet, maintenance } = require("./Utils/customReplies");
 const { isDeveloper } = require("./Utils/isDeveloper");
 const { canExecute } = require("./Services/cooldownService");
+const { showInfo } = require("./Utils/customInformations");
+const { isNullOrUndefined } = require("./Utils/isNullOrUndefined");
 
 module.exports = {
     name : "interactionCreate",
@@ -14,44 +16,32 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
-        console.log(`[INTERACTION] ${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.`);
-        if (!interaction.isChatInputCommand() && !interaction.isButton() && !interaction.isAnySelectMenu() && !interaction.isModalSubmit()) return;
+        /**
+         * Logs every interaction triggered by a user in the console.
+         */
+        let isInGuild = isNullOrUndefined(interaction.guild) ? false : true;
+        showInfo(
+            "INTERACTION",
+            `${interaction.user.tag} triggered an interaction in ` +
+            `${isInGuild ? `guild #${interaction.guild.name} ` +
+            `| #${interaction.channel.name}.` : "DMs"}`
+        );
 
+        /**
+         * If the bot is in maintenance mode, only developers can interact with the bot.
+         * If the user is not a developer, the bot will reply with a maintenance message.
+         */
         if (client.maintenance === true && await isDeveloper(client, interaction.user.id) === false)
             return await maintenance(interaction);
 
-        if (interaction.isButton()) {
-            const button = client.buttons.get(interaction.customId);
-
-            if (button == undefined || button == null) {
-                return await notDeveloppedYet(interaction);
-            }
-
-            if (!button.noDeferred)
-                await interaction.deferReply({ ephemeral: button.ephemeral });
-
-            button.execute(interaction, client);
-        }
-
-        if (interaction.isModalSubmit()) {
-            const modal = client.modals.get(interaction.customId);
-
-            if (modal == undefined || modal == null) {
-                return await notDeveloppedYet(interaction);
-            }
-
-            if (!modal.noDeferred)
-                await interaction.deferReply({ ephemeral: modal.ephemeral });
-
-            modal.execute(interaction, client);
-        }
-
-        if (interaction.isChatInputCommand()) {
+        /**
+         * If the interaction is a command, the bot will execute it (if it exists).
+         */
+        if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
             const command = client.commands.get(interaction.commandName);
 
-            if (command == null || command == undefined) {
+            if (isNullOrUndefined(command))
                 return notDeveloppedYet(interaction);
-            }
 
             if (!command.noDeferred)
                 await interaction.deferReply({ ephemeral: command.ephemeral });
@@ -60,31 +50,33 @@ module.exports = {
             await command.execute(interaction, client);
         }
 
-        if (interaction.isContextMenuCommand()) {
-            const command = client.commands.get(interaction.commandName);
+        /**
+         * If the interaction is a button, select menu or modal, the bot will execute it (if it exists).
+         */
+        if (interaction.isButton() || interaction.isAnySelectMenu() || interaction.isModalSubmit()) {
+            let items = null;
 
-            if (command == null || command == undefined) {
-                return notDeveloppedYet(interaction);
-            }
+            if (interaction.isButton())
+                items = client.loader.buttons;
+            if (interaction.isAnySelectMenu())
+                items = client.loader.selectMenus;
+            if (interaction.isModalSubmit())
+                items = client.loader.modals;
 
-            if (!command.noDeferred)
-                await interaction.deferReply({ ephemeral: command.ephemeral });
+            let item = null;
+            if (items)
+                item = items.find(i => i.pattern.test(interaction.customId));
 
-            if (await canExecute(client, interaction, command) === false) return;
-            await command.execute(interaction, client);
-        }
-
-        if (interaction.isAnySelectMenu()) {
-            const select = client.selectMenus.get(interaction.customId);
-
-            if (select == undefined || select == null) {
+            if (isNullOrUndefined(item))
                 return await notDeveloppedYet(interaction);
-            }
 
-            if (!select.noDeferred)
-                await interaction.deferReply({ ephemeral: select.ephemeral });
+            const match = item.pattern.exec(interaction.customId);
+            const dynamicValues = Array.from(match).slice(1);
 
-            select.execute(interaction, client);
+            if (!item.noDeferred)
+                await interaction.deferReply({ ephemeral: item.ephemeral });
+
+            item.execute(interaction, client, ...dynamicValues);
         }
     }
 }
