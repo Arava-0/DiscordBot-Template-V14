@@ -75,7 +75,7 @@ function loadItem(client, loadedFile)
 	let success = true;
 
 	try {
-		const pattern = new RegExp(loadedFile.id.replace(/{!}/g, '(.*?)'));
+		const pattern = new RegExp(`^${loadedFile.id.replace(/{!}/g, '([\\w@.#$!,-]+)')}$`);
 
 		client.loader[`${type}s`].push({
 			id: loadedFile.id,
