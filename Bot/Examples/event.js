@@ -21,6 +21,7 @@ const { VoiceState, Client, Events } = require('discord.js')
 
 module.exports = {
 	name: Events.ClientReady,
+    type: "event",
 	once: true,
 
     /**
@@ -32,6 +33,7 @@ module.exports = {
 
 module.exports = {
 	name: Events.GuildMemberAdd,
+    type: "event",
 	once: false,
 
     /**
@@ -44,6 +46,7 @@ module.exports = {
 
 module.exports = {
     name: Events.VoiceStateUpdate,
+    type: "event",
     once: false,
 
     /**
