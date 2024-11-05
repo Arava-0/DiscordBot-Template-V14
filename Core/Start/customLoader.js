@@ -44,7 +44,8 @@ function loadCommand(client, loadedFileCommand)
 			name: cmd.name,
 			data: cmd,
 			isOnPrivateGuild: isNullOrUndefined(loadedFileCommand.isOnPrivateGuild) ? null : loadedFileCommand.isOnPrivateGuild,
-			cooldown: isNullOrUndefined(loadedFileCommand.cooldown) ? null : loadedFileCommand.cooldown,
+			userCooldown: isNullOrUndefined(loadedFileCommand.userCooldown) ? null : loadedFileCommand.userCooldown,
+			serverCooldown: isNullOrUndefined(loadedFileCommand.serverCooldown) ? null : loadedFileCommand.serverCooldown,
 			noDeferred: isNullOrUndefined(loadedFileCommand.noDeferred) ? false : loadedFileCommand.noDeferred,
 			ephemeral: isNullOrUndefined(loadedFileCommand.ephemeral) ? false : loadedFileCommand.ephemeral,
 			execute: loadedFileCommand.execute,
@@ -192,7 +193,7 @@ async function loadEverything(client)
 	);
 	showInfo(
 		`LOADER`,
-		`  > ${Object.keys(guildsCommandArray).length} guilds commands loaded`
+		`  > ${client.loader.commands.length} - ${globalCommandArray.length}} guild commands loaded`
 	);
 }
 
