@@ -45,7 +45,7 @@ client.login(process.env.TOKEN).then(async () => {
     await Core.loadEverything(client);
     await Core.launchPresenceService(client);
     Core.showInfo("READY", "   Bot prêt à l'emploi ! | Pseudo: " + client.user.tag);
-    Core.ready();
+    Core.ready(client);
 })
 
 module.exports = {
