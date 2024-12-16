@@ -1,7 +1,6 @@
 const cron = require('node-cron');
 const { ActivityType } = require("discord.js");
 const { getRandomInt } = require('../Utils/math');
-const { sleep } = require('../Utils/time');
 const { showInfo } = require('../Utils/customInformations');
 
 async function updatePresence(client, message)
