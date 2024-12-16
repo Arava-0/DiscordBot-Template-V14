@@ -15,6 +15,10 @@ const errorHandler = require('./Start/errorHandler');
 const initClient = require('./Start/initClient');
 const shutdownHandler = require('./Start/shutdownHandler');
 
+// Imports des modules de configuration
+const createConfig = require('./Config/createConfig');
+const updateConfig = require('./Config/updateConfig');
+
 module.exports = {
     // Exportation des utilitaires
     ...customInformations,
@@ -32,4 +36,8 @@ module.exports = {
     ...errorHandler,
     ...initClient,
     ...shutdownHandler,
+
+    // Exportation des modules de configuration
+    ...createConfig,
+    ...updateConfig,
 };
