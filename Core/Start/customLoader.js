@@ -193,7 +193,7 @@ async function loadEverything(client)
 	);
 	showInfo(
 		`LOADER`,
-		`  > ${client.loader.commands.length} - ${globalCommandArray.length}} guild commands loaded`
+		`  > ${client.loader.commands.length - globalCommandArray.length} guild commands loaded`
 	);
 }
 
