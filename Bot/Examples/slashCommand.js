@@ -14,7 +14,13 @@ const { ChatInputCommandInteraction, SlashCommandBuilder, Client } = require('di
  *
  * - `serverCooldown`: Specifies the cooldown period for the entire server for
  *   the command in ms. If set to `null`, no cooldown is applied.
+ *   ex: if user A uses the command, user B will have to wait for the cooldown too
+ *   (only if user B is on the same server).
+ *
+ * - `globalCooldown`: Specifies the cooldown period for the entire bot for
+ *   the command in ms. If set to `null`, no cooldown is applied.
  *   ex: if user A uses the command, user B will have to wait for the cooldown too.
+ *   (even if user B is in another server).
  *
  * - `noDeferred`: If set to `false` or undefined, the command response is
  *   automatically deferred, meaning the bot will wait for more time to complete
@@ -39,6 +45,7 @@ module.exports = {
     type: "command",
     userCooldown: null,
     serverCooldown: null,
+    globalCooldown: null,
     noDeferred: false,
     ephemeral: true,
     isOnPrivateGuild: "123456789012345678",

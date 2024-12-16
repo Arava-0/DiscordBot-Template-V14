@@ -25,10 +25,16 @@ Les commandes contextuelles permettent de déclencher des actions via le menu co
     - Si activé, la réponse est visible uniquement par l’utilisateur qui a exécuté la commande.
     - Ne fonctionne que dans le cas ou `noDeferred` n'est pas activé ou sur `false`.
 
-- **Cooldowns** :
-  - **`userCooldown`** : Applique un délai entre deux utilisations de la commande pour un utilisateur spécifique. Si défini sur `3000`, l’utilisateur devra attendre 3 secondes avant de l’utiliser à nouveau.
-  - **`serverCooldown`** : Implique un délai global pour tout le serveur. Si défini, tous les utilisateurs doivent attendre ce délai avant que la commande puisse être utilisée à nouveau.
-  - Ces deux cooldowns peuvent être combinés : par exemple, un utilisateur pourrait être limité à un usage toutes les 5 secondes, et tout le serveur à 10 secondes.
+- **Cooldowns**:
+  - **`globalCooldown`**
+    - Applique un délai de réutilisation **commun à tous les serveurs et tous les utilisateurs**.
+    Par exemple, si défini à `5000`, **personne** ne pourra réutiliser la commande avant 5 secondes, sur **n’importe quel** serveur.
+  - **`serverCooldown`**
+    - Applique un délai **partagé par tous les membres du serveur** où la commande a été exécutée.
+    Par exemple, si défini à `10000`, alors **tout le serveur** devra attendre 10 secondes avant que **quelqu’un** puisse lancer à nouveau la commande (même si un autre utilisateur du serveur n’a pas encore utilisé cette commande).
+  - **`userCooldown`**
+    - Applique un délai **spécifique à chaque utilisateur**.
+    Par exemple, si défini à `3000`, chaque utilisateur devra attendre 3 secondes avant de pouvoir réutiliser la commande.
 
 ---
 
@@ -43,8 +49,7 @@ Les commandes slash permettent aux utilisateurs de taper `/commande` dans la bar
   - **`isOnPrivateGuild`** : Identiques aux commandes contextuelles.
   - **`noDeferred`** et **`ephemeral`** : Identiques aux commandes contextuelles.
   - **Options des commandes** : Vous pouvez ajouter des paramètres aux commandes via des méthodes comme `.addStringOption()`, permettant d’ajouter des entrées utilisateur.
-
-- **Cooldowns** : Identiques aux commandes contextuelles.
+  - **Cooldowns** : Identiques aux commandes contextuelles.
 
 ---
 

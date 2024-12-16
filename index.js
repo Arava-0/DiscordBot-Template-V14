@@ -43,6 +43,7 @@ client.login(process.env.TOKEN).then(async () => {
     await Core.initClient(client);
     await Core.errorHandler(client);
     await Core.loadEverything(client);
+    await Core.cooldownService(client);
     await Core.launchPresenceService(client);
     Core.showInfo("READY", "   Bot prêt à l'emploi ! | Pseudo: " + client.user.tag);
     Core.ready(client);
