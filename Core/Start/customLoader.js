@@ -132,44 +132,64 @@ function loadItem(client, loadedFile)
 async function applyRegisteredEvents(client) {
     try {
         for (const registeredEvent of client.loader.events) {
-            const { name: eventName, events } = registeredEvent;
+			const { name: eventName, events } = registeredEvent;
 
-            const sortedEvents = events.sort((a, b) => b.priority - a.priority);
-            const onceEvents = sortedEvents.filter(event => event.once);
-            const onEvents = sortedEvents.filter(event => !event.once);
+			const sortedEvents = events.sort((a, b) => b.priority - a.priority);
+			const onceEvents = sortedEvents.filter(event => event.once);
+			const onEvents = sortedEvents.filter(event => !event.once);
 
-            const createWrapper = (events) => (...args) => {
-                for (const { execute } of events) {
-                    for (const handler of execute) {
-                        Promise.resolve().then(() => handler(...args)).catch((err) => {
-							showError(
-								`EVENT ERROR`,
-								`An error occurred in an event: ${err.message}`,
-								err.stack
-							);
-						});
-                    }
-                }
-            };
+			const createWrapper = (events) => async (...args) => {
+				let currentPriority = null;
+				let pendingPromises = [];
 
-            if (onceEvents.length > 0) {
-                client.once(eventName, createWrapper(onceEvents));
-				if (client.debugMode)
+				for (const { priority, execute } of events) {
+					if (currentPriority === null || currentPriority !== priority) {
+						if (pendingPromises.length > 0) {
+							await Promise.all(pendingPromises);
+							pendingPromises = [];
+						}
+						currentPriority = priority;
+					}
+
+					for (const handler of execute) {
+						const promise = Promise.resolve()
+							.then(() => handler(...args))
+							.catch((err) => {
+								showError(
+									`EVENT ERROR`,
+									`An error occurred in an event: ${err.message}`,
+									err.stack
+								);
+							});
+						pendingPromises.push(promise);
+					}
+				}
+
+				if (pendingPromises.length > 0) {
+					await Promise.all(pendingPromises);
+				}
+			};
+
+			if (onceEvents.length > 0) {
+				client.once(eventName, createWrapper(onceEvents));
+				if (client.debugMode) {
 					showInfo(
 						`EVENTS LOADED`,
 						`  >> ${onceEvents.length} once event(s) applied for ${eventName}`
 					);
-            }
+				}
+			}
 
-            if (onEvents.length > 0) {
-                client.on(eventName, createWrapper(onEvents));
-				if (client.debugMode)
+			if (onEvents.length > 0) {
+				client.on(eventName, createWrapper(onEvents));
+				if (client.debugMode) {
 					showInfo(
 						`EVENTS LOADED`,
 						`  >> ${onEvents.length} on event(s) applied for ${eventName}`
 					);
-            }
-        }
+				}
+			}
+		}
     } catch (err) {
         showError(
             `Failed to apply registered events.`,

@@ -4,6 +4,29 @@ Cette template est un point de départ structuré pour développer un bot Discor
 
 ---
 
+## Comment utiliser cette template ?
+
+1. **Configurer votre bot** :
+   - Récupérez le token de votre bot depuis le [portail Discord Developer](https://discord.com/developers/applications).
+   - Configurez un fichier `.env` ou une variable d’environnement pour inclure votre token.
+
+2. **Ajouter vos propres commandes et interactions** :
+   - Inspirez-vous des exemples fournis pour créer de nouvelles fonctionnalités.
+   - Modifiez les propriétés comme `userCooldown`, `isOnPrivateGuild`, `ephemeral` selon vos besoins.
+   - Des exemples sont présents dans `/Bot/Examples`, toutes vos commandes/interactions/events doivent être placés dans `/Bot/...`.
+
+---
+
+## Points forts de cette template
+- **Flexibilité** : Gère les commandes, interactions et événements facilement grâce à des structures modulaires.
+- **Contrôle précis** : Cooldowns utilisateur/serveur, restrictions de guildes spécifiques avec `isOnPrivateGuild`.
+- **Adaptabilité** : Utilisation des patterns dynamiques `{!}` pour gérer plusieurs variantes d’une interaction unique.
+- **Optimisation** : La gestion des événements utilise un wrapper d'exécution optimisé pour garantir une exécution ordonnée et performante.
+
+Avec cette structure, vous pouvez rapidement développer un bot puissant et extensible pour Discord.
+
+---
+
 ## Fonctionnalités détaillées
 
 ### **1. Commandes contextuelles**
@@ -91,27 +114,14 @@ Les événements permettent au bot de réagir automatiquement à des actions sp�
   - **`once`** :
     - Si `true`, l’événement est déclenché une seule fois, comme `ClientReady`.
     - Si `false`, il peut être déclenché plusieurs fois.
-  - **Arguments de la fonction `execute()`** :
-    - Les événements passent des arguments spécifiques à leur nature, comme un membre (`GuildMember`) pour `GuildMemberAdd` ou deux états vocaux (`oldState`, `newState`) pour `VoiceStateUpdate`.
+  - **`priority`** :
+    - Permet de définir un ordre d'exécution des handlers d'un **même événement** (plusieurs GuildMemberAdd par exemple).
+    - Les handlers avec une **valeur de priorité plus élevée** s'exécutent avant les handlers avec une priorité plus basse.
+    - Les handlers ayant la **même priorité** sont exécutés en parallèle pour optimiser les performances.
+    - Exemple :
+      - Un handler avec une priorité de `5` sera exécuté avant un handler avec une priorité de `3`.
 
----
-
-## Comment utiliser cette template ?
-
-1. **Configurer votre bot** :
-   - Récupérez le token de votre bot depuis le [portail Discord Developer](https://discord.com/developers/applications).
-   - Configurez un fichier `.env` ou une variable d’environnement pour inclure votre token.
-
-2. **Ajouter vos propres commandes et interactions** :
-   - Inspirez-vous des exemples fournis pour créer de nouvelles fonctionnalités.
-   - Modifiez les propriétés comme `userCooldown`, `isOnPrivateGuild`, `ephemeral` selon vos besoins.
-   - Des exemples sont présents dans `/Bot/Examples`, toutes vos commandes/interactions/events doivent être placés dans `/Bot/...`.
-
----
-
-## Points forts de cette template
-- **Flexibilité** : Gère les commandes, interactions et événements facilement grâce à des structures modulaires.
-- **Contrôle précis** : Cooldowns utilisateur/serveur, restrictions de guildes spécifiques avec `isOnPrivateGuild`.
-- **Adaptabilité** : Utilisation des patterns dynamiques `{!}` pour gérer plusieurs variantes d’une interaction unique.
-
-Avec cette structure, vous pouvez rapidement développer un bot puissant et extensible pour Discord.
+- **Arguments de la fonction `execute()`** :
+  - Les événements passent des arguments spécifiques à leur nature :
+    - Par exemple, un membre (`GuildMember`) pour `GuildMemberAdd` ou deux états vocaux (`oldState`, `newState`) pour `VoiceStateUpdate`.
+  - Le premier argument de chaque fonction `execute()` est toujours le **client**, suivi des autres arguments relatifs à l'événement.

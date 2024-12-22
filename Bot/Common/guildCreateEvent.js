@@ -11,7 +11,6 @@ module.exports = {
      * @param {Guild} event
      */
     async execute(client, event) {
-        showInfo("GUILDS", `${client.user.username} has joined the guild ${event.name} (${event.id}) (2)`);
-        throw new Error("This is a test error.");
+        showInfo("GUILDS", `${client.user.username} has joined the guild ${event.name} (${event.id})`);
     }
 }

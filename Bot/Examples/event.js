@@ -9,6 +9,19 @@ const { VoiceState, Client, Events } = require('discord.js')
  * - **name**: Specifies the event name using Events enum.
  * - **once**: Boolean value that determines if the listener should run only
  *   once (`true`) or multiple times (`false`).
+ * - **`priority`**: Integer value that determines the order in which event
+ *   listeners are executed. Handlers with a **higher priority value** are
+ *   executed first. If multiple handlers have the same priority, they are
+ *   executed in the order they were added.
+ *
+ * ## Event Execution Flow:
+ * - Handlers are grouped into two categories based on the `once` property:
+ *   - **`once`** handlers are executed only once when the event is triggered.
+ *   - **`on`** handlers are executed every time the event is triggered.
+ * - Handlers are sorted by their `priority` value in descending order.
+ *   - **Handlers with the same priority are executed in parallel.**
+ *   - **Handlers with different priorities are executed sequentially, waiting
+ *     for all handlers of the current priority to finish before moving to the next.**
  *
  * **Parameters for the `execute` function**:
  * - `client` (`Client`): Represents the bot instance, allowing access to all
