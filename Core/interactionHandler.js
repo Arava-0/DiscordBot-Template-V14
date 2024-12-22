@@ -9,6 +9,7 @@ const { isNullOrUndefined } = require("./Utils/isNullOrUndefined");
 module.exports = {
     name : "interactionCreate",
     type: "event",
+    priority: 999,
     once: false,
     /**
      * @param {Client} client

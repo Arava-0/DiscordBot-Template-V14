@@ -6,26 +6,52 @@ const { isNullOrUndefined } = require("../Utils/isNullOrUndefined");
 function loadEvent(client, loadedFileEvent)
 {
 	let success = true;
+	let eventPriority;
+	let eventExecute;
+	let eventOnce;
+
+	let eventName = loadedFileEvent.name || "unknown";
 
 	try {
-		const execute = (...args) => loadedFileEvent.execute(client, ...args);
+		eventExecute = (...args) => loadedFileEvent.execute(client, ...args);
+		eventPriority = loadedFileEvent.priority || 0;
+		eventOnce = loadedFileEvent.once || false;
 
-		if (loadedFileEvent.once)
-			client.once(loadedFileEvent.name, execute);
-		else
-			client.on(loadedFileEvent.name, execute);
+		if (isNullOrUndefined(eventExecute) || typeof eventExecute !== "function")
+			throw new Error("The event execution function is not defined or is not a function.");
+		if (isNullOrUndefined(eventName) || eventName === "unknown")
+			throw new Error("The event name is not defined.");
+		if (isNullOrUndefined(eventPriority) || isNaN(eventPriority))
+			throw new Error("The event priority is not a number.");
 
-		client.loader.events.push(loadedFileEvent.name)
+		let findIndexExistingEvent = client.loader.events.findIndex((e) => e.name === eventName);
+		if (findIndexExistingEvent !== -1) {
+			client.loader.events[findIndexExistingEvent].events.push({
+				priority: eventPriority,
+				once: eventOnce,
+				execute: [eventExecute]
+			});
+		} else {
+			client.loader.events.push({
+				name: eventName,
+				events: [{
+					priority: eventPriority,
+					once: eventOnce,
+					execute: [eventExecute]
+				}]
+			});
+		}
+
 		if (client.debugMode)
 			showInfo (
-				`- EVENT       LOADED`,
-				`Name: ${loadedFileEvent.name} | Type: ${loadedFileEvent.once ? "once" : "on"}`
+				`- EVENT   REGISTERED`,
+				`Name: ${eventName} | Type: ${eventOnce ? "once" : "on"}`
 			);
 	} catch (err) {
 		success = false;
 		showError (
 			`EVENT FAILED TO LOAD`,
-			`Name: ${loadedFileEvent.name} | ${err}`,
+			`Name: ${eventName} | ${err}`,
 			client.debugMode == true ? err.stack : null
 		);
 	}
@@ -103,6 +129,56 @@ function loadItem(client, loadedFile)
 	return (success);
 }
 
+async function applyRegisteredEvents(client) {
+    try {
+        for (const registeredEvent of client.loader.events) {
+            const { name: eventName, events } = registeredEvent;
+
+            const sortedEvents = events.sort((a, b) => b.priority - a.priority);
+            const onceEvents = sortedEvents.filter(event => event.once);
+            const onEvents = sortedEvents.filter(event => !event.once);
+
+            const createWrapper = (events) => (...args) => {
+                for (const { execute } of events) {
+                    for (const handler of execute) {
+                        Promise.resolve().then(() => handler(...args)).catch((err) => {
+							showError(
+								`EVENT ERROR`,
+								`An error occurred in an event: ${err.message}`,
+								err.stack
+							);
+						});
+                    }
+                }
+            };
+
+            if (onceEvents.length > 0) {
+                client.once(eventName, createWrapper(onceEvents));
+				if (client.debugMode)
+					showInfo(
+						`EVENTS LOADED`,
+						`  >> ${onceEvents.length} once event(s) applied for ${eventName}`
+					);
+            }
+
+            if (onEvents.length > 0) {
+                client.on(eventName, createWrapper(onEvents));
+				if (client.debugMode)
+					showInfo(
+						`EVENTS LOADED`,
+						`  >> ${onEvents.length} on event(s) applied for ${eventName}`
+					);
+            }
+        }
+    } catch (err) {
+        showError(
+            `Failed to apply registered events.`,
+            err.message,
+            client.debugMode ? err.stack : null
+        );
+    }
+}
+
 async function loadEverything(client)
 {
 	const files = await loadFiles("./Bot", ["/Bot/Examples/"]);
@@ -140,7 +216,8 @@ async function loadEverything(client)
 		}
 	});
 
-	showInfo(`LOADER`, `  > ${client.loader.events.length} events loaded`);
+	await applyRegisteredEvents(client);
+	showInfo(`LOADER`, `  > ${client.loader.events.reduce((c, e) => c + e.events.length, 0)} events loaded`);
 	showInfo(`LOADER`, `  > ${client.loader.buttons.length} buttons loaded`);
 	showInfo(`LOADER`, `  > ${client.loader.selectMenus.length} select menus loaded`);
 	showInfo(`LOADER`, `  > ${client.loader.modals.length} modals loaded`);
