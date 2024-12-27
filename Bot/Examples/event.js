@@ -33,28 +33,28 @@ const { VoiceState, Client, Events } = require('discord.js')
  */
 
 module.exports = {
-	name: Events.ClientReady,
+    name: Events.ClientReady,
     type: "event",
-	once: true,
+    once: true,
 
     /**
      * @param {Client} client
      */
-	async execute(client) {
-	}
+    async execute(client) {
+    }
 }
 
 module.exports = {
-	name: Events.GuildMemberAdd,
+    name: Events.GuildMemberAdd,
     type: "event",
-	once: false,
+    once: false,
 
     /**
      * @param {Client} client
      * @param {GuildMember} member
      */
-	async execute(client, member) {
-	}
+    async execute(client, member) {
+    }
 }
 
 module.exports = {
