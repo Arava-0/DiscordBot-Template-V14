@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kdeboissy/DiscordBot-Template-V14.git"
+    "url": "git+https://github.com/Arava-0/DiscordBot-Template-V14.git"
   },
   "author": "Arava",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kdeboissy/DiscordBot-Template-V14/issues"
+    "url": "https://github.com/Arava-0/DiscordBot-Template-V14/issues"
   },
-  "homepage": "https://github.com/kdeboissy/DiscordBot-Template-V14#readme",
+  "homepage": "https://github.com/Arava-0/DiscordBot-Template-V14#readme",
   "dependencies": {
-    "discord.js": "^14.16.3",
-    "dotenv": "^16.4.5",
-    "glob": "^11.0.0",
+    "discord.js": "^14.17.3",
+    "dotenv": "^16.4.7",
+    "glob": "^11.0.1",
     "node-cron": "^3.0.3"
   }
 }
