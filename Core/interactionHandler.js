@@ -1,4 +1,4 @@
-const { CommandInteraction, Client, ChannelType } = require("discord.js");
+const { CommandInteraction, Client, MessageFlags } = require("discord.js");
 
 const { notDeveloppedYet, maintenance } = require("./Utils/customReplies");
 const { isDeveloper } = require("./Utils/isDeveloper");
@@ -44,7 +44,7 @@ module.exports = {
                 return notDeveloppedYet(interaction);
 
             if (!command.noDeferred)
-                await interaction.deferReply({ ephemeral: command.ephemeral });
+                await interaction.deferReply({ flags: command.ephemeral ? MessageFlags.Ephemeral : undefined });
 
             if (await canExecute(client, interaction, command) === false) return;
             await command.execute(interaction, client);
@@ -74,7 +74,7 @@ module.exports = {
             const dynamicValues = Array.from(match).slice(1);
 
             if (!item.noDeferred)
-                await interaction.deferReply({ ephemeral: item.ephemeral });
+                await interaction.deferReply({ flags: item.ephemeral ? MessageFlags.Ephemeral : undefined });
 
             item.execute(interaction, client, ...dynamicValues);
         }
