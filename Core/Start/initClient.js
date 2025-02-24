@@ -1,5 +1,6 @@
 const { EmbedBuilder, WebhookClient, ActivityType } = require('discord.js')
 const { showInfo } = require("../Utils/customInformations");
+const { isNullOrUndefined } = require('../Utils/isNullOrUndefined');
 
 async function initClient(client)
 {
@@ -42,6 +43,12 @@ function ready(client)
 {
     if (process.send)
         process.send("ready");
+
+    if (isNullOrUndefined(client.cache))
+        client.cache = {};
+    client.cache["ready"] = true;
+    console.log("Bot READY!");
+    client.emit("ready");
 
     const webhookCheck = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[\w-]+$/;
     if (client.cache["webhookURL"] && webhookCheck.test(client.cache["webhookURL"])) {

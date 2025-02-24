@@ -142,6 +142,9 @@ async function applyRegisteredEvents(client) {
 				let currentPriority = null;
 				let pendingPromises = [];
 
+				if (!client.cache || !client.cache.ready)
+					return;
+
 				for (const { priority, execute } of events) {
 					if (currentPriority === null || currentPriority !== priority) {
 						if (pendingPromises.length > 0) {

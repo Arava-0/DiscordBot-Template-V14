@@ -1,6 +1,6 @@
 const { CommandInteraction, Client, MessageFlags } = require("discord.js");
 
-const { notDeveloppedYet, maintenance } = require("./Utils/customReplies");
+const { notDeveloppedYet, maintenance, botStarting } = require("./Utils/customReplies");
 const { isDeveloper } = require("./Utils/isDeveloper");
 const { canExecute } = require("./Services/cooldownService");
 const { showInfo } = require("./Utils/customInformations");
@@ -33,6 +33,12 @@ module.exports = {
          */
         if (client.maintenance === true && await isDeveloper(client, interaction.user.id) === false)
             return await maintenance(interaction);
+
+        /**
+         * If the bot is not ready, the bot will reply with a starting message.
+         */
+        if (!client.cache || !client.cache.ready)
+            return await botStarting(interaction);
 
         /**
          * If the interaction is a command, the bot will execute it (if it exists).
