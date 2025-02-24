@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Arava-0/DiscordBot-Template-V14#readme",
   "dependencies": {
-    "discord.js": "^14.17.3",
+    "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "glob": "^11.0.1",
     "node-cron": "^3.0.3"
