@@ -4,7 +4,7 @@ const { isNullOrUndefined } = require("../Utils/isNullOrUndefined");
 async function answerCooldownActive(interaction, lastUsed, remaining, type)
 {
     const remainingSeconds = (remaining / 1000).toFixed(2);
-    let msg = `**Patientez ${remainingSeconds} secondes** avant d'utiliser cette commande.\n\n`;
+    let msg = `**Patientez ${remainingSeconds} secondes** avant d'utiliser cette commande.\n`;
 
     switch (type) {
         case 1:
@@ -12,15 +12,15 @@ async function answerCooldownActive(interaction, lastUsed, remaining, type)
             msg += `-# > *Le cooldown global affecte tous les utilisateurs sans exception.*`;
             break;
         case 2:
-            msg += `-# > Type de cooldown**: Serveur\n`
+            msg += `-# > **Type de cooldown**: Serveur\n`
             msg += `-# > *Dans ce serveur, la commande est temporairement verrouillée pour tout le monde.*`;
             break;
         case 3:
-            msg += `-# > Type de cooldown**: Utilisateur\n`
+            msg += `-# > **Type de cooldown**: Utilisateur\n`
             msg += `-# > *Seul votre compte est concerné par ce délai.*`;
             break;
         default:
-            msg += `-# > Type de cooldown**: Inconnu\n`
+            msg += `-# > **Type de cooldown**: Inconnu\n`
             msg += `-# > *Un délai de sécurité est actif.*`;
             break;
     }
