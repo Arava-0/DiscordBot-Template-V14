@@ -26,9 +26,9 @@ async function answerCooldownActive(interaction, lastUsed, remaining, type)
     }
 
     if (interaction.deferred || interaction.replied)
-        await interaction.editReply({ content: messageContent, ephemeral: true });
+        await interaction.editReply({ content: msg, ephemeral: true });
     else
-        await interaction.reply({ content: messageContent, ephemeral: true });
+        await interaction.reply({ content: msg, ephemeral: true });
 }
 
 async function canExecute(client, interaction, command)
