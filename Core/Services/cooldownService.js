@@ -1,4 +1,5 @@
 const cron = require('node-cron');
+const { MessageFlags } = require("discord.js");
 const { isNullOrUndefined } = require("../Utils/isNullOrUndefined");
 
 async function answerCooldownActive(interaction, lastUsed, remaining, type)
@@ -26,9 +27,9 @@ async function answerCooldownActive(interaction, lastUsed, remaining, type)
     }
 
     if (interaction.deferred || interaction.replied)
-        await interaction.editReply({ content: msg, ephemeral: true });
+        await interaction.editReply({ content: msg, flags: MessageFlags.Ephemeral });
     else
-        await interaction.reply({ content: msg, ephemeral: true });
+        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
 }
 
 async function canExecute(client, interaction, command)
