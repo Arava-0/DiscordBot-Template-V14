@@ -47,7 +47,6 @@ function ready(client)
     if (isNullOrUndefined(client.cache))
         client.cache = {};
     client.cache["ready"] = true;
-    console.log("Bot READY!");
     client.emit("ready");
 
     const webhookCheck = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[\w-]+$/;
