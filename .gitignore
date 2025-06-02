@@ -13,3 +13,6 @@ package-lock.json
 
 # Git files
 .gitignore
+
+# Configuration files
+Core/Config/*.json
