@@ -11,6 +11,6 @@ module.exports = {
      * @param {Guild} event
      */
     async execute(client, event) {
-        showInfo("GUILDS", `${client.user.username} is no longer in the guild ${event.name} (${event.id}) (0)`);
+        showInfo("GUILDS", `${client.user.username} is no longer in the guild ${event.name} (${event.id})`);
     }
 }
