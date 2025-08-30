@@ -1,3 +1,12 @@
+/*
+ * This file is part of DiscordBot-Template-V14 project by Arava.
+ * You are authorized to use, modify, and distribute this project under the terms of the MIT License.
+ * For more information, please consult: https://github.com/Arava-0/DiscordBot-Template-V14.
+ * Year: 2025
+ *
+ * Please never remove this comment block.
+ */
+
 function showError(errorType, errorMessage, errorStack)
 {
     console.error(`\x1b[1m\x1b[38;2;255;0;0m[${errorType}] ${errorMessage}\x1b[0m`);
