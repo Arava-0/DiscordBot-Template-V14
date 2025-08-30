@@ -1,3 +1,12 @@
+/*
+ * This file is part of DiscordBot-Template-V14 project by Arava.
+ * You are authorized to use, modify, and distribute this project under the terms of the MIT License.
+ * For more information, please consult: https://github.com/Arava-0/DiscordBot-Template-V14.
+ * Year: 2025
+ *
+ * Please never remove this comment block.
+ */
+
 const { EmbedBuilder, Colors, MessageFlags } = require("discord.js");
 
 const NOT_DEVELOPPED_YET = new EmbedBuilder()
