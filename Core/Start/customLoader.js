@@ -53,7 +53,7 @@ function loadEvent(client, loadedFileEvent)
 
 		if (client.debugMode)
 			showInfo (
-				`- EVENT   REGISTERED`,
+				`➥  EVENT REGISTERED`,
 				`Name: ${eventName} | Type: ${eventOnce ? "once" : "on"}`
 			);
 	} catch (err) {
@@ -91,7 +91,7 @@ function loadCommand(client, loadedFileCommand)
 			if (loadedFileCommand.isOnPrivateGuild)
 				debug += ` | Guild: ${loadedFileCommand.isOnPrivateGuild}`;
 
-			showInfo (`- COMMAND     LOADED`, debug);
+			showInfo (`➥  COMMAND LOADED`, debug);
 		}
 	} catch (err) {
 		success = false;
@@ -123,7 +123,7 @@ function loadItem(client, loadedFile)
 
 		if (client.debugMode)
 			showInfo (
-				`- ${type.toUpperCase()}${" ".repeat(12 - type.length)}LOADED`,
+				`➥  ${type.toUpperCase()} LOADED`,
 				`Name: ${loadedFile.id}`
 			);
 	} catch (err) {
@@ -187,7 +187,7 @@ async function applyRegisteredEvents(client) {
 				if (client.debugMode) {
 					showInfo(
 						`EVENTS LOADED`,
-						`  >> ${onceEvents.length} once event(s) applied for ${eventName}`
+						`>> ${onceEvents.length} once event(s) applied for ${eventName}`
 					);
 				}
 			}
@@ -197,7 +197,7 @@ async function applyRegisteredEvents(client) {
 				if (client.debugMode) {
 					showInfo(
 						`EVENTS LOADED`,
-						`  >> ${onEvents.length} on event(s) applied for ${eventName}`
+						`>> ${onEvents.length} on event(s) applied for ${eventName}`
 					);
 				}
 			}
@@ -249,10 +249,10 @@ async function loadEverything(client)
 	});
 
 	await applyRegisteredEvents(client);
-	showInfo(`LOADER`, `  > ${client.loader.events.reduce((c, e) => c + e.events.length, 0)} events loaded`);
-	showInfo(`LOADER`, `  > ${client.loader.buttons.length} buttons loaded`);
-	showInfo(`LOADER`, `  > ${client.loader.selectMenus.length} select menus loaded`);
-	showInfo(`LOADER`, `  > ${client.loader.modals.length} modals loaded`);
+	showInfo(`LOADER`, `> ${client.loader.events.reduce((c, e) => c + e.events.length, 0)} events loaded`);
+	showInfo(`LOADER`, `> ${client.loader.buttons.length} buttons loaded`);
+	showInfo(`LOADER`, `> ${client.loader.selectMenus.length} select menus loaded`);
+	showInfo(`LOADER`, `> ${client.loader.modals.length} modals loaded`);
 
 	let globalCommandArray = [];
 	let guildsCommandArray = {};
@@ -270,7 +270,7 @@ async function loadEverything(client)
 	if (globalCommandArray.length == 0 && Object.keys(guildsCommandArray).length == 0) {
 		return showInfo(
 			`LOADER`,
-			`  > Aucune commande n'a été chargée...`
+			`> Aucune commande n'a été chargée...`
 		);
 	}
 
@@ -298,11 +298,11 @@ async function loadEverything(client)
 
 	showInfo(
 		`LOADER`,
-		`  > ${globalCommandArray.length} global commands loaded`
+		`> ${globalCommandArray.length} global commands loaded`
 	);
 	showInfo(
 		`LOADER`,
-		`  > ${client.loader.commands.length - globalCommandArray.length} guild commands loaded`
+		`> ${client.loader.commands.length - globalCommandArray.length} guild commands loaded`
 	);
 }
 
