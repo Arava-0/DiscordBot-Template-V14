@@ -41,7 +41,7 @@ async function errorHandler(client)
 
     deployUncaughtException(client);
     deployUnhandledRejection(client);
-    showInfo(`CRASH`, `   Anti-crash system actif !`);
+    showInfo(`CRASH`, `Anti-crash system actif !`);
 }
 
 function deployUncaughtException(client)

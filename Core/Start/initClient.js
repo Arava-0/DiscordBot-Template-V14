@@ -45,7 +45,7 @@ async function initClient(client)
         await guild.channels.fetch();
     }
 
-    showInfo("CLIENT", "  Client discord initialisé !");
+    showInfo("CLIENT", "Client discord initialisé !");
 }
 
 function ready(client)

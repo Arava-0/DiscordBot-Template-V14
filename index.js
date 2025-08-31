@@ -38,14 +38,14 @@ const client = new Client({
 require('dotenv').config();
 
 client.login(process.env.TOKEN).then(async () => {
-    Core.showInfo("LOGIN", "   Connexion à l'API Discord réussie | Pseudo: " + client.user.tag);
+    Core.showInfo("LOGIN", "Connexion à l'API Discord réussie | Pseudo: " + client.user.tag);
     await Core.shutdownHandler(client);
     await Core.initClient(client);
     await Core.errorHandler(client);
     await Core.loadEverything(client);
     await Core.cooldownService(client);
     await Core.launchPresenceService(client);
-    Core.showInfo("READY", "   Bot prêt à l'emploi ! | Pseudo: " + client.user.tag);
+    Core.showInfo("READY", "Bot prêt à l'emploi ! | Pseudo: " + client.user.tag);
     Core.ready(client);
 })
 

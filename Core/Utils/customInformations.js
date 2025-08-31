@@ -24,7 +24,10 @@ function showError(errorType, errorMessage, errorStack)
 
 function showInfo(infoType, infoMessage)
 {
-    console.info(`\x1b[1m\x1b[38;2;255;255;0m[${infoType}] \x1b[38;2;8;255;230m${infoMessage}\x1b[0m`);
+    const repeatCount = (8 - (infoType?.length || 0)) < 0 ? 0 : (8 - (infoType?.length || 0));
+    const padding = " ".repeat(repeatCount);
+
+    console.info(`\x1b[1m\x1b[38;2;255;255;0m[${infoType}]${padding} \x1b[38;2;8;255;230m${infoMessage}\x1b[0m`);
 }
 
 module.exports = {
