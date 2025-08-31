@@ -8,37 +8,58 @@
  */
 
 const cron = require('node-cron');
-const { MessageFlags } = require("discord.js");
+const { Colors, MessageFlags, ContainerBuilder, SeparatorSpacingSize, TextDisplayBuilder } = require("discord.js");
 const { isNullOrUndefined } = require("../Utils/isNullOrUndefined");
 
 async function answerCooldownActive(interaction, lastUsed, remaining, type)
 {
     const remainingSeconds = (remaining / 1000).toFixed(2);
-    let msg = `**Patientez ${remainingSeconds} secondes** avant d'utiliser cette commande.\n`;
+    let bottomText = new TextDisplayBuilder()
 
     switch (type) {
         case 1:
-            msg += `-# > **Type de cooldown**: Global\n`
-            msg += `-# > *Le cooldown global affecte tous les utilisateurs sans exception.*`;
+            bottomText.setContent([
+                `-# > **Type de cooldown**: Global`,
+                `-# > *Le cooldown global affecte tous les utilisateurs sans exception.*`
+            ].join("\n"))
             break;
         case 2:
-            msg += `-# > **Type de cooldown**: Serveur\n`
-            msg += `-# > *Dans ce serveur, la commande est temporairement verrouillée pour tout le monde.*`;
+            bottomText.setContent([
+                `-# > **Type de cooldown**: Serveur`,
+                `-# > *Dans ce serveur, la commande est temporairement verrouillée pour tout le monde.*`
+            ].join("\n"))
             break;
         case 3:
-            msg += `-# > **Type de cooldown**: Utilisateur\n`
-            msg += `-# > *Seul votre compte est concerné par ce délai.*`;
+            bottomText.setContent([
+                `-# > **Type de cooldown**: Utilisateur`,
+                `-# > *Seul votre compte est concerné par ce délai.*`
+            ].join("\n"))
             break;
         default:
-            msg += `-# > **Type de cooldown**: Inconnu\n`
-            msg += `-# > *Un délai de sécurité est actif.*`;
+            bottomText.setContent([
+                `-# > **Type de cooldown**: Inconnu`,
+                `-# > *Un délai de sécurité est actif.*`
+            ].join("\n"))
             break;
     }
 
+    const COMPONENT = new ContainerBuilder()
+        .setAccentColor(Colors.Orange)
+        .addTextDisplayComponents(
+            textDisplay => textDisplay
+                .setContent(`**Patientez ${remainingSeconds} secondes** avant d'utiliser cette commande.`)
+        )
+        .addSeparatorComponents(
+            separator => separator
+                .setSpacing(SeparatorSpacingSize.Small)
+                .setDivider(true)
+        )
+        .addTextDisplayComponents(bottomText);
+
     if (interaction.deferred || interaction.replied)
-        await interaction.editReply({ content: msg, flags: MessageFlags.Ephemeral });
+        await interaction.editReply({ components: [COMPONENT], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     else
-        await interaction.reply({ content: msg, flags: MessageFlags.Ephemeral });
+        await interaction.reply({ components: [COMPONENT], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
 }
 
 async function canExecute(client, interaction, command)
