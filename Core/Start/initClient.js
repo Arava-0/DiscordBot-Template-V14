@@ -56,7 +56,7 @@ function ready(client)
     if (isNullOrUndefined(client.cache))
         client.cache = {};
     client.cache["ready"] = true;
-    client.emit("ready");
+    client.emit("clientReady");
 
     const webhookCheck = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[\w-]+$/;
     if (client.cache["webhookURL"] && webhookCheck.test(client.cache["webhookURL"])) {
