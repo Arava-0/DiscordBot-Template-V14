@@ -7,43 +7,68 @@
  * Please never remove this comment block.
  */
 
-const { EmbedBuilder, Colors, MessageFlags } = require("discord.js");
+const { Colors, MessageFlags, ContainerBuilder, SeparatorSpacingSize } = require("discord.js");
 
-const NOT_DEVELOPPED_YET = new EmbedBuilder()
-    .setTitle("**FONCTIONNALITÉ NON DÉVELOPPÉE**")
-    .setColor(Colors.Orange)
+const NOT_DEVELOPPED_YET = new ContainerBuilder()
+    .setAccentColor(Colors.Orange)
+    .addTextDisplayComponents(
+        textDisplay => textDisplay
+            .setContent("Cette fonctionnalité n'est pas encore développée.")
+    )
 
-const MAINTENANCE = new EmbedBuilder()
-    .setTitle("**MAINTENANCE EN COURS**")
-    .setDescription("Merci de patienter...")
-    .setColor(Colors.Orange)
+const MAINTENANCE = new ContainerBuilder()
+    .setAccentColor(Colors.Orange)
+    .addTextDisplayComponents(
+        textDisplay => textDisplay
+            .setContent("**Une maintenance est en cours.**")
+    )
+    .addSeparatorComponents(
+        separator => separator
+            .setSpacing(SeparatorSpacingSize.Small)
+            .setDivider(true)
+    )
+    .addTextDisplayComponents(
+        textDisplay => textDisplay
+            .setContent("-# *Merci de patienter...*")
+    )
 
-const BOT_STARTING = new EmbedBuilder()
-    .setTitle("**DÉMARRAGE DU BOT EN COURS**")
-    .setDescription("Merci de patienter...")
-    .setColor(Colors.Orange)
+const BOT_STARTING = new ContainerBuilder()
+    .setAccentColor(Colors.Orange)
+    .addTextDisplayComponents(
+        textDisplay => textDisplay
+            .setContent("**Démarrage du bot en cours.**")
+    )
+    .addSeparatorComponents(
+        separator => separator
+            .setSpacing(SeparatorSpacingSize.Small)
+            .setDivider(true)
+    )
+    .addTextDisplayComponents(
+        textDisplay => textDisplay
+            .setContent("-# *Merci de patienter...*")
+    )
 
 async function notDeveloppedYet(interaction) {
     if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ embeds: [NOT_DEVELOPPED_YET], flags: MessageFlags.Ephemeral });
+        await interaction.editReply({ components: [NOT_DEVELOPPED_YET], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     } else {
-        await interaction.reply({ embeds: [NOT_DEVELOPPED_YET], flags: MessageFlags.Ephemeral });
+        await interaction.reply({ components: [NOT_DEVELOPPED_YET], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     }
 }
 
 async function maintenance(interaction) {
     if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ embeds: [MAINTENANCE], flags: MessageFlags.Ephemeral });
+        await interaction.editReply({ components: [MAINTENANCE], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     } else {
-        await interaction.reply({ embeds: [MAINTENANCE], flags: MessageFlags.Ephemeral });
+        await interaction.reply({ components: [MAINTENANCE], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     }
 }
 
 async function botStarting(interaction) {
     if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ embeds: [BOT_STARTING], flags: MessageFlags.Ephemeral });
+        await interaction.editReply({ components: [BOT_STARTING], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     } else {
-        await interaction.reply({ embeds: [BOT_STARTING], flags: MessageFlags.Ephemeral });
+        await interaction.reply({ components: [BOT_STARTING], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral });
     }
 }
 
