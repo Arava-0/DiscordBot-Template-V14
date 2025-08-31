@@ -7,7 +7,7 @@
  * Please never remove this comment block.
  */
 
-const { EmbedBuilder, WebhookClient, ActivityType } = require('discord.js')
+const { EmbedBuilder, WebhookClient, ActivityType, Colors } = require('discord.js')
 const { showInfo } = require("../Utils/customInformations");
 const { isNullOrUndefined } = require('../Utils/isNullOrUndefined');
 
@@ -86,7 +86,7 @@ function ready(client)
                         new EmbedBuilder()
                             .setTitle(`${client.user.tag} vient de démarrer !`)
                             .setDescription(description)
-                            .setColor(client.config.color.success)
+                            .setColor(Colors.Green)
                             .setTimestamp()
                             .setFooter({
                                 text: "Core made by Arava ❤️",
