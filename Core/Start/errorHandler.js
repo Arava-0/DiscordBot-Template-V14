@@ -7,7 +7,7 @@
  * Please never remove this comment block.
  */
 
-const { EmbedBuilder, WebhookClient } = require('discord.js')
+const { EmbedBuilder, WebhookClient, Colors } = require('discord.js')
 const { showInfo, showError } = require('../Utils/customInformations')
 
 async function errorHandler(client)
@@ -61,7 +61,7 @@ function deployUncaughtException(client)
                 content: `\`\`\`js\n${error.stack}\`\`\``,
                 embeds: [
                     new EmbedBuilder()
-                        .setColor(client.config.color.error)
+                        .setColor(Colors.Red)
                         .setTitle(`Uncaught Exception`)
                         .setFooter({text: `${client.user.tag} - Created by Arava`})
                 ]
@@ -86,7 +86,7 @@ function deployUnhandledRejection(client)
                 content: `\`\`\`js\n${error.stack}\`\`\``,
                 embeds: [
                     new EmbedBuilder()
-                        .setColor(client.config.color.error)
+                        .setColor(Colors.Orange)
                         .setTitle(`Unhandled Rejection`)
                         .setFooter({text: `${client.user.tag} - Created by Arava`})
                 ]
