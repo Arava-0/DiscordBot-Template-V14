@@ -7,7 +7,7 @@
  * Please never remove this comment block.
  */
 
-const { EmbedBuilder, WebhookClient, ActivityType, Colors } = require('discord.js')
+const { EmbedBuilder, WebhookClient, ActivityType, Colors, Events } = require('discord.js')
 const { showInfo } = require("../Utils/customInformations");
 const { isNullOrUndefined } = require('../Utils/isNullOrUndefined');
 
@@ -56,7 +56,7 @@ function ready(client)
     if (isNullOrUndefined(client.cache))
         client.cache = {};
     client.cache["ready"] = true;
-    client.emit("clientReady");
+    client.emit(Events.ClientReady);
 
     const webhookCheck = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[\w-]+$/;
     if (client.cache["webhookURL"] && webhookCheck.test(client.cache["webhookURL"])) {
