@@ -7,6 +7,8 @@
  * Please never remove this comment block.
  */
 
+const { randomBytes } = require('crypto');
+
 function getRandomInt(min, max) {
     return (Math.floor(Math.random() * (max - min) + min));
 }
@@ -29,6 +31,26 @@ async function isNumber(data) {
     return (true);
 }
 
+/**
+ * Generates a short UUID in the form of 'xxxx-xxxx-xxxx-xxxx'
+ * Total possibilities: 2^64 = 18.4 quintillion
+ * @returns {Promise<String>} A short UUID in the form of 'xxxx-xxxx-xxxx-xxxx'
+ */
+async function shortUUID() {
+    const hex = randomBytes(8).toString('hex');
+    return hex.match(/.{1,4}/g).join('-');
+}
+
+/**
+ * Generates a long UUID in the form of 'xxxxxx-xxxxxx-xxxxxx-xxxxxx'
+ * Total possibilities: 2^128 = 340 undecillion
+ * @returns {Promise<String>} A long UUID in the form of 'xxxxxx-xxxxxx-xxxxxx-xxxxxx'
+ */
+async function longUUID() {
+    const hex = randomBytes(16).toString('hex');
+    return hex.match(/.{1,6}/g).join('-');
+}
+
 module.exports = {
-    getRandomInt, isNumber
+    getRandomInt, isNumber, shortUUID, longUUID
 }
