@@ -15,4 +15,4 @@ package-lock.json
 .gitignore
 
 # Configuration files
-Core/Config/*.json
+Core/Config/**/*.json
