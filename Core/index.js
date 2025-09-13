@@ -11,6 +11,7 @@
 const customInformations = require('./Utils/customInformations');
 const isDeveloper = require('./Utils/isDeveloper');
 const isNullOrUndefined = require('./Utils/isNullOrUndefined');
+const parseDiscordName = require('./Utils/parseDiscordName');
 const math = require('./Utils/math');
 const time = require('./Utils/time');
 
@@ -25,14 +26,14 @@ const initClient = require('./Start/initClient');
 const shutdownHandler = require('./Start/shutdownHandler');
 
 // Imports des modules de configuration
-const createConfig = require('./Config/createConfig');
-const updateConfig = require('./Config/updateConfig');
+const jsonConfigs = require('./Config/jsonConfig');
 
 module.exports = {
     // Exportation des utilitaires
     ...customInformations,
     ...isDeveloper,
     ...isNullOrUndefined,
+    ...parseDiscordName,
     ...math,
     ...time,
 
@@ -47,6 +48,5 @@ module.exports = {
     ...shutdownHandler,
 
     // Exportation des modules de configuration
-    ...createConfig,
-    ...updateConfig,
+    ...jsonConfigs,
 };
