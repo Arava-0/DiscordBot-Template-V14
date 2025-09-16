@@ -128,3 +128,29 @@ Les événements permettent au bot de réagir automatiquement à des actions sp�
   - Les événements passent des arguments spécifiques à leur nature :
     - Par exemple, un membre (`GuildMember`) pour `GuildMemberAdd` ou deux états vocaux (`oldState`, `newState`) pour `VoiceStateUpdate`.
   - Le premier argument de chaque fonction `execute()` est toujours le **client**, suivi des autres arguments relatifs à l'événement.
+
+---
+
+### **5. Configurations JSON intégrées**
+Le système de configuration permet de stocker et de manipuler facilement des fichiers JSON persistants pour garder des paramètres entre chaque redémarrage du bot.  
+Il est idéal pour gérer des préférences, des paramètres par serveur/utilisateur ou encore l’état de certaines interactions.
+
+#### Fonctionnement :
+- Les fichiers sont stockés dans `/Core/Config/Data/**/*.json` et nommés automatiquement `<name>.json`.
+- Chaque opération utilise des **écritures atomiques** (fichier temporaire + renommage) pour éviter toute corruption.
+- Si un fichier est **corrompu**, une sauvegarde est créée automatiquement avec un suffixe `.corrupt-...json`.
+
+#### Fonctions principales :
+- **`createConfigFile(name, initial = {})`**
+  - Crée un fichier si absent avec un contenu initial.
+  - Ne modifie rien si le fichier existe déjà.
+- **`getConfigFile(name)`**
+  - Charge un fichier JSON.
+  - Crée un fichier vide (`{}`) si inexistant, ou sauvegarde l’ancien si corrompu.
+- **`updateConfig(name, newContent)`**
+  - Met à jour un fichier JSON avec un objet ou une fonction *(updater)* qui reçoit l’état actuel.
+  - Exemple :  
+    ```js
+    await updateConfig('guilds', (cfg) => {});
+    await updateConfig('guilds', { ... });
+    ```

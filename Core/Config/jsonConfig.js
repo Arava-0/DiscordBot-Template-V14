@@ -13,7 +13,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { showError } = require('../Utils/customInformations');
 
-const BASE_DIR = __dirname;
+const BASE_DIR = `${__dirname}/Data`;
 
 async function writeJsonAtomic(filePath, data) {
     const dir = path.dirname(filePath);
