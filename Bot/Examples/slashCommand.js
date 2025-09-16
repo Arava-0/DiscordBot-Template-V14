@@ -22,14 +22,14 @@ const { ChatInputCommandInteraction, SlashCommandBuilder, Client } = require('di
  *   ex: if user A uses the command, user B will have to wait for the cooldown too.
  *   (even if user B is in another server).
  *
- * - `noDeferred`: If set to `false` or undefined, the command response is
- *   automatically deferred, meaning the bot will wait for more time to complete
- *   the response, and you must use `editReply()` to respond. If set to `true`,
- *   the response is not deferred, and you can use `.reply()` to respond directly.
+ * - `deferReply`: If set to `true`, the command response is automatically deferred,
+ *   meaning the bot will wait for more time to complete the response, and you must
+ *   use `editReply()` to respond. If set to `false` or undefined the response is
+ *   not deferred, and you can use `.reply()` to respond directly.
  *
  * - `ephemeral`: Controls whether the response is ephemeral (visible only to the
- *   user who invoked the command). This setting only takes effect if `noDeferred`
- *   is set to `false` or undefined.
+ *   user who invoked the command). This setting only takes effect if `deferReply`
+ *   is set to `true`.
  *
  * - `isOnPrivateGuild`: (Optional) The ID of the guild where the command is
  *   restricted. If not provided, the command will be registered globally.
@@ -46,7 +46,7 @@ module.exports = {
     userCooldown: null,
     serverCooldown: null,
     globalCooldown: null,
-    noDeferred: false,
+    deferReply: false,
     ephemeral: true,
     isOnPrivateGuild: "123456789012345678",
 
