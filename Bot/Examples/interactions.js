@@ -6,14 +6,18 @@
  *
  * - **id**: Represents the identifier of the interaction. `{!}` is a placeholder
  *   that can be replaced by a dynamic value during runtime.
- * - **noDeferred**: Indicates whether the interaction should be deferred:
- *   - If `false`, the response is automatically deferred, and you must use
+ * - **deferReply**: Indicates whether the interaction should be deferReplied:
+ *   - If `true`, the response is automatically deferred, and you must use
  *     `editReply()` to respond.
- *   - If `true`, the response is not deferred, and you can use `.reply()` to
+ *   - If `false`, the response is not deferred, and you can use `.reply()` to
+ *     respond directly.
+ * - **deferUpdate**: Indicates whether the interaction should be deferUpdated:
+ *   - If `true`, the interaction is automatically deferred, and you must use
+ *     `editReply()` to respond.
+ *   - If `false`, the interaction is not deferred, and you can use `.reply()` to
  *     respond directly.
  * - **ephemeral**: If `true`, the response will be ephemeral (visible only to
- *   the user). This is only applicable when `noDeferred` is `false` or
- *   undefined.
+ *   the user). This is only applicable when `deferReply` is `true`.
  * - **type**: Defines the type of interaction being handled. This can be a
  *   `"button"`, `"selectMenu"`, or `"modal"`.
  *
@@ -32,7 +36,8 @@
 
 module.exports = {
     id: "button-test-{!}",
-    noDeferred: false,
+    deferReply: false,
+    deferUpdate: false,
     ephemeral: true,
     type: `button || selectMenu || modal`,
 

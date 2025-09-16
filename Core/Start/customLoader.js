@@ -81,7 +81,7 @@ function loadCommand(client, loadedFileCommand)
 			isOnPrivateGuild: isNullOrUndefined(loadedFileCommand.isOnPrivateGuild) ? null : loadedFileCommand.isOnPrivateGuild,
 			userCooldown: isNullOrUndefined(loadedFileCommand.userCooldown) ? null : loadedFileCommand.userCooldown,
 			serverCooldown: isNullOrUndefined(loadedFileCommand.serverCooldown) ? null : loadedFileCommand.serverCooldown,
-			noDeferred: isNullOrUndefined(loadedFileCommand.noDeferred) ? false : loadedFileCommand.noDeferred,
+			deferReply: isNullOrUndefined(loadedFileCommand.deferReply) ? false : loadedFileCommand.deferReply,
 			ephemeral: isNullOrUndefined(loadedFileCommand.ephemeral) ? false : loadedFileCommand.ephemeral,
 			execute: loadedFileCommand.execute,
 		})
@@ -116,10 +116,18 @@ function loadItem(client, loadedFile)
 		client.loader[`${type}s`].push({
 			id: loadedFile.id,
 			pattern: pattern,
-			noDeferred: isNullOrUndefined(loadedFile.noDeferred) ? false : loadedFile.noDeferred,
+			deferReply: isNullOrUndefined(loadedFile.deferReply) ? false : loadedFile.deferReply,
+			deferUpdate: isNullOrUndefined(loadedFile.deferUpdate) ? false : loadedFile.deferUpdate,
 			ephemeral: isNullOrUndefined(loadedFile.ephemeral) ? false : loadedFile.ephemeral,
 			execute: loadedFile.execute,
 		});
+
+		if (loadedFile.deferReply && loadedFile.deferUpdate)
+			showError(
+				`LOADING WARNING`,
+				`Item: ${loadedFile.id} | Both 'deferReply' and 'deferUpdate' are set to true. Only one should be true.`,
+				"none"
+			);
 
 		if (client.debugMode)
 			showInfo (

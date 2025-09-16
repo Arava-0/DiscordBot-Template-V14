@@ -7,7 +7,7 @@
  * Please never remove this comment block.
  */
 
-const { CommandInteraction, Client, MessageFlags } = require("discord.js");
+const { Client, MessageFlags, BaseInteraction } = require("discord.js");
 
 const { notDeveloppedYet, maintenance, botStarting } = require("./Utils/customReplies");
 const { isDeveloper } = require("./Utils/isDeveloper");
@@ -22,7 +22,7 @@ module.exports = {
     once: false,
     /**
      * @param {Client} client
-     * @param {CommandInteraction} interaction
+     * @param {BaseInteraction} interaction
      */
     async execute(client, interaction) {
         /**
@@ -58,7 +58,7 @@ module.exports = {
             if (isNullOrUndefined(command))
                 return notDeveloppedYet(interaction);
 
-            if (!command.noDeferred)
+            if (command.deferReply)
                 await interaction.deferReply({ flags: command.ephemeral ? MessageFlags.Ephemeral : undefined });
 
             if (await canExecute(client, interaction, command) === false) return;
@@ -88,8 +88,10 @@ module.exports = {
             const match = item.pattern.exec(interaction.customId);
             const dynamicValues = Array.from(match).slice(1);
 
-            if (!item.noDeferred)
+            if (item.deferReply)
                 await interaction.deferReply({ flags: item.ephemeral ? MessageFlags.Ephemeral : undefined });
+            else if (item.deferUpdate)
+                await interaction.deferUpdate();
 
             item.execute(interaction, client, ...dynamicValues);
         }

@@ -41,12 +41,12 @@ Les commandes contextuelles permettent de déclencher des actions via le menu co
   - **`isOnPrivateGuild`** :
     - Si cette propriété est définie avec un ID de serveur, la commande sera **restreinte à ce serveur**.
     - Si elle n’est pas définie, la commande sera enregistrée globalement (visible sur tous les serveurs où le bot est présent).
-  - **`noDeferred`** :
-    - Si `false` ou non spécifié, la réponse est différée. Cela signifie que Discord accorde plus de temps pour répondre, mais vous devez utiliser une méthode comme `editReply()` pour envoyer une réponse.
-    - Si `true`, la réponse est immédiate et doit être envoyée avec `.reply()`.
+  - **`deferReply`** :
+    - Si `true`, la réponse est différée. Cela signifie que Discord accorde plus de temps pour répondre, mais vous devez utiliser une méthode comme `editReply()` pour envoyer une réponse.
+    - Si `false` ou `undefined`, la réponse est immédiate et doit être envoyée avec `.reply()`.
   - **`ephemeral`** :
     - Si activé, la réponse est visible uniquement par l’utilisateur qui a exécuté la commande.
-    - Ne fonctionne que dans le cas ou `noDeferred` n'est pas activé ou sur `false`.
+    - Ne fonctionne que dans le cas ou `deferReply` est actif sur `true`.
 
 - **Cooldowns**:
   - **`globalCooldown`**
@@ -70,7 +70,7 @@ Les commandes slash permettent aux utilisateurs de taper `/commande` dans la bar
 
 - **Propriétés importantes** :
   - **`isOnPrivateGuild`** : Identiques aux commandes contextuelles.
-  - **`noDeferred`** et **`ephemeral`** : Identiques aux commandes contextuelles.
+  - **`deferReply`** et **`ephemeral`** : Identiques aux commandes contextuelles.
   - **Options des commandes** : Vous pouvez ajouter des paramètres aux commandes via des méthodes comme `.addStringOption()`, permettant d’ajouter des entrées utilisateur.
   - **Cooldowns** : Identiques aux commandes contextuelles.
 
@@ -91,9 +91,12 @@ Les interactions permettent au bot de répondre aux actions directes des utilisa
   - **Modaux** : Actions déclenchées par l’envoi d’un formulaire avec plusieurs champs.
 
 - **Propriétés importantes** :
-  - **`noDeferred`** :
-    - Si `false`, la réponse est différée, ce qui permet de gérer des traitements longs avant de répondre.
-    - Si `true`, la réponse est immédiate.
+  - **`deferReply`** :
+    - Si `true`, la réponse est différée, ce qui permet de gérer des traitements longs avant de répondre.
+    - Si `false` ou `undefined`, la réponse est immédiate.
+  - **`deferUpdate`** :
+    - Si `true`, l’interaction est différée, ce qui est utile pour les boutons et menus où une mise à jour visuelle est nécessaire.
+    - Si `false` ou `undefined`, la réponse est immédiate.
   - **`ephemeral`** : Si `true`, la réponse est uniquement visible pour l’utilisateur ayant déclenché l’interaction.
 
 - **Gestion des patterns dynamiques** :
