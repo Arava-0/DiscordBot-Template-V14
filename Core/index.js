@@ -18,6 +18,7 @@ const time = require('./Utils/time');
 // Imports des services
 const presenceService = require('./Services/presenceService');
 const cooldownService = require('./Services/cooldownService');
+const { pushToDoWhenShutdown: onShutdown } = require('./Services/shutdownService');
 
 // Imports des modules de démarrage
 const customLoader = require('./Start/customLoader');
@@ -40,6 +41,7 @@ module.exports = {
     // Exportation des services
     ...presenceService,
     ...cooldownService,
+    onShutdown,
 
     // Exportation des modules de démarrage
     ...customLoader,
