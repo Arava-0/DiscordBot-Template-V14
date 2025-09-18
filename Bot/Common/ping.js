@@ -5,7 +5,7 @@ module.exports = {
     type: "command",
     userCooldown: null,
     serverCooldown: null,
-    noDeferred: false,
+    deferReply: true,
     ephemeral: true,
     isOnPrivateGuild: null,
 
