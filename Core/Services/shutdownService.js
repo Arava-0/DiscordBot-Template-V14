@@ -8,6 +8,7 @@
  */
 
 const { Client } = require("discord.js");
+const { showError } = require("../Utils/customInformations");
 
 const shutdownTasks = new Map();
 
@@ -41,11 +42,12 @@ async function shutdownService(client, shutdownMessage) {
     );
 
     for (const [name, task] of shutdownTasks) {
-        console.log(`[ShutdownService] Executing task: ${name}`);
+        if (client.debugMode)
+            console.log(`[ShutdownService] Executing task: ${name}`);
         try {
             await task(client);
         } catch (err) {
-            console.error(`[ShutdownService] Error executing task ${name}:`, err);
+            showError('SHUTDOWN', `Error executing task ${name}: ${err}`, client.debugMode == true ? err.stack : null);
         }
     }
 }
