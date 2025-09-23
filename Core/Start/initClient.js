@@ -26,6 +26,7 @@ async function initClient(client)
     client.config = require('../../config.json');
     client.debugMode = client.config.debugMode;
     client.maintenance = client.config.maintenance;
+    client.devWatcherMode = process.env.DEV_WATCHER === "true";
     client.cache["webhookURL"] = client.config.webhookURL;
 
     await client.user.setPresence({

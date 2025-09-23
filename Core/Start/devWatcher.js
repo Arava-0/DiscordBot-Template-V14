@@ -22,7 +22,7 @@ function collectFilesToWatch(client) {
 }
 
 async function startDevWatcher(client) {
-    if (!client.config.devWatcher) return;
+    if (!client.devWatcherMode) return;
 
     const filesToWatch = collectFilesToWatch(client);
     if (filesToWatch.length === 0)
