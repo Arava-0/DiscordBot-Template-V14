@@ -7,6 +7,7 @@
  * Please never remove this comment block.
  */
 
+const { showError, showInfo } = require("./customInformations");
 const { glob } = require("glob");
 const path = require("path");
 
@@ -33,4 +34,49 @@ async function loadFiles(dirName, excludeDirs = []) {
 	}
 }
 
-module.exports = { loadFiles };
+async function finder(client, resolvedPath) {
+	let target;
+
+	for (const command of client?.loader?.commands)
+		if (command.__file === resolvedPath)
+			target = { type: "command", ref: command, name: command?.name };
+
+	for (const pool of ["buttons", "selectMenus", "modals"])
+		for (const item of client?.loader?.[pool])
+			if (item.__file === resolvedPath)
+				target = { type: pool.slice(0, -1), ref: item, name: item?.id };
+
+	for (const event of client?.loader?.events)
+		for (const evt of event.events)
+			if (evt.__file === resolvedPath)
+				target = { type: "event", ref: evt, name: event?.name };
+
+	return (target);
+}
+
+async function reloadFile(client, filePath) {
+	try {
+		const resolvedPath = path.resolve(filePath);
+		const target = await finder(client, resolvedPath);
+
+		if (!target) return;
+
+		await deleteCachedFile(resolvedPath);
+		const reloadedFile = require(resolvedPath);
+		if (!reloadedFile || typeof reloadedFile !== "object")
+			return showError("RELOADER", `Le fichier ${filePath} n'a pas pu être rechargé.`, "none");
+		if (!reloadedFile.execute || typeof reloadedFile.execute !== "function")
+			return showError("RELOADER", `Le fichier ${filePath} n'a pas pu être rechargé. (execute missing)`, "none");
+
+		target.ref.execute = reloadedFile.execute;
+		showInfo("RELOADER", `Le fichier ${target.name} (${target.type}) a été rechargé avec succès.`);
+	} catch (err) {
+		showError(
+			"RELOADER",
+			`Une erreur est survenue lors du rechargement du fichier: ${filePath}`,
+			client.debugMode ? err.stack : null
+		)
+	}
+}
+
+module.exports = { loadFiles, reloadFile };

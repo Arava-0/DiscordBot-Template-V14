@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Arava-0/DiscordBot-Template-V14#readme",
   "dependencies": {
+    "chokidar": "^4.0.3",
     "discord.js": "^14.22.1",
     "dotenv": "^17.2.1",
     "glob": "^11.0.3",

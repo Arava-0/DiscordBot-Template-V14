@@ -7,10 +7,10 @@
  * Please never remove this comment block.
  */
 
-const { REST, Routes } = require("discord.js");
 const { showInfo, showError } = require("../Utils/customInformations");
-const { loadFiles } = require("../Utils/fileLoader");
 const { isNullOrUndefined } = require("../Utils/isNullOrUndefined");
+const { loadFiles } = require("../Utils/fileLoader");
+const { REST, Routes } = require("discord.js");
 
 function loadEvent(client, loadedFileEvent)
 {
@@ -38,7 +38,8 @@ function loadEvent(client, loadedFileEvent)
 			client.loader.events[findIndexExistingEvent].events.push({
 				priority: eventPriority,
 				once: eventOnce,
-				execute: [eventExecute]
+				execute: [eventExecute],
+				__file: loadedFileEvent.__file
 			});
 		} else {
 			client.loader.events.push({
@@ -46,7 +47,8 @@ function loadEvent(client, loadedFileEvent)
 				events: [{
 					priority: eventPriority,
 					once: eventOnce,
-					execute: [eventExecute]
+					execute: [eventExecute],
+					__file: loadedFileEvent.__file
 				}]
 			});
 		}
@@ -84,6 +86,7 @@ function loadCommand(client, loadedFileCommand)
 			deferReply: isNullOrUndefined(loadedFileCommand.deferReply) ? false : loadedFileCommand.deferReply,
 			ephemeral: isNullOrUndefined(loadedFileCommand.ephemeral) ? false : loadedFileCommand.ephemeral,
 			execute: loadedFileCommand.execute,
+			__file: loadedFileCommand.__file
 		})
 
 		if (client.debugMode) {
@@ -120,6 +123,7 @@ function loadItem(client, loadedFile)
 			deferUpdate: isNullOrUndefined(loadedFile.deferUpdate) ? false : loadedFile.deferUpdate,
 			ephemeral: isNullOrUndefined(loadedFile.ephemeral) ? false : loadedFile.ephemeral,
 			execute: loadedFile.execute,
+			__file: loadedFile.__file
 		});
 
 		if (loadedFile.deferReply && loadedFile.deferUpdate)
@@ -234,6 +238,7 @@ async function loadEverything(client)
 		if (isNullOrUndefined(loadedFile) || isNullOrUndefined(loadedFile.type))
 			return;
 
+		loadedFile.__file = file;
 		switch (loadedFile.type) {
 			case "event":
 				loadEvent(client, loadedFile);
