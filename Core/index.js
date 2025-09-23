@@ -25,6 +25,7 @@ const customLoader = require('./Start/customLoader');
 const errorHandler = require('./Start/errorHandler');
 const initClient = require('./Start/initClient');
 const shutdownHandler = require('./Start/shutdownHandler');
+const devWatcher = require('./Start/devWatcher');
 
 // Imports des modules de configuration
 const jsonConfigs = require('./Config/jsonConfig');
@@ -48,6 +49,7 @@ module.exports = {
     ...errorHandler,
     ...initClient,
     ...shutdownHandler,
+    ...devWatcher,
 
     // Exportation des modules de configuration
     ...jsonConfigs,
