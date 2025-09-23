@@ -1,7 +1,6 @@
 {
     "devID": ["912362420096344124"],
     "debugMode": false,
-    "devWatcher": false,
     "maintenance": false,
     "webhookURL": "https://discord.com/api/webhooks/id/token",
 
