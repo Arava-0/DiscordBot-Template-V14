@@ -15,39 +15,30 @@ const { REST, Routes } = require("discord.js");
 function loadEvent(client, loadedFileEvent)
 {
 	let success = true;
-	let eventPriority;
-	let eventExecute;
-	let eventOnce;
-
-	let eventName = loadedFileEvent.name || "unknown";
 
 	try {
-		eventExecute = (...args) => loadedFileEvent.execute(client, ...args);
-		eventPriority = loadedFileEvent.priority || 0;
-		eventOnce = loadedFileEvent.once || false;
-
-		if (isNullOrUndefined(eventExecute) || typeof eventExecute !== "function")
+		if (typeof loadedFileEvent?.execute !== "function")
 			throw new Error("The event execution function is not defined or is not a function.");
-		if (isNullOrUndefined(eventName) || eventName === "unknown")
+		if (isNullOrUndefined(loadedFileEvent.name))
 			throw new Error("The event name is not defined.");
-		if (isNullOrUndefined(eventPriority) || isNaN(eventPriority))
+		if (isNaN(loadedFileEvent.priority ?? 0))
 			throw new Error("The event priority is not a number.");
 
-		let findIndexExistingEvent = client.loader.events.findIndex((e) => e.name === eventName);
+		let findIndexExistingEvent = client.loader.events.findIndex((e) => e.name === loadedFileEvent.name);
 		if (findIndexExistingEvent !== -1) {
 			client.loader.events[findIndexExistingEvent].events.push({
-				priority: eventPriority,
-				once: eventOnce,
-				execute: [eventExecute],
+				priority: loadedFileEvent.priority || 0,
+				once: loadedFileEvent.once || false,
+				execute: loadedFileEvent.execute,
 				__file: loadedFileEvent.__file
 			});
 		} else {
 			client.loader.events.push({
-				name: eventName,
+				name: loadedFileEvent.name,
 				events: [{
-					priority: eventPriority,
-					once: eventOnce,
-					execute: [eventExecute],
+					priority: loadedFileEvent.priority || 0,
+					once: loadedFileEvent.once || false,
+					execute: loadedFileEvent.execute,
 					__file: loadedFileEvent.__file
 				}]
 			});
@@ -56,13 +47,13 @@ function loadEvent(client, loadedFileEvent)
 		if (client.debugMode)
 			showInfo (
 				`➥  EVENT REGISTERED`,
-				`Name: ${eventName} | Type: ${eventOnce ? "once" : "on"}`
+				`Name: ${loadedFileEvent.name} | Type: ${loadedFileEvent.once ? "once" : "on"}`
 			);
 	} catch (err) {
 		success = false;
 		showError (
 			`EVENT FAILED TO LOAD`,
-			`Name: ${eventName} | ${err}`,
+			`Name: ${loadedFileEvent.name} | ${err}`,
 			client.debugMode == true ? err.stack : null
 		);
 	}
@@ -175,18 +166,16 @@ async function applyRegisteredEvents(client) {
 						currentPriority = priority;
 					}
 
-					for (const handler of execute) {
-						const promise = Promise.resolve()
-							.then(() => handler(...args))
-							.catch((err) => {
-								showError(
-									`EVENT ERROR`,
-									`An error occurred in an event: ${err.message}`,
-									err.stack
-								);
-							});
-						pendingPromises.push(promise);
-					}
+					const promise = Promise.resolve()
+						.then(() => execute(client, ...args))
+						.catch((err) => {
+							showError(
+								`EVENT ERROR`,
+								`An error occurred in an event: ${err.message}`,
+								err.stack
+							);
+						});
+					pendingPromises.push(promise);
 				}
 
 				if (pendingPromises.length > 0) {
