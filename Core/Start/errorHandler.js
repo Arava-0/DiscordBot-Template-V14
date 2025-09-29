@@ -25,7 +25,7 @@ async function errorHandler(client)
         } catch (err) {
             showError(
                 `WEBHOOK`, `Impossible de se connecter au webhook | ${err}`,
-			    client.debugMode == true ? err.stack : null
+			    client.config.debugMode == true ? err.stack : null
             );
             client.cache["errorHandler"]["webhookState"] = false;
         }
@@ -33,7 +33,7 @@ async function errorHandler(client)
         showError(
             `WEBHOOK`,
             `Webhook non configuré ou URL invalide (https://discord.com/api/webhooks/ID/TOKEN) -> config.json`,
-            client.debugMode == true ? `URL received: "${client.cache["webhookURL"]}"` : null
+            client.config.debugMode == true ? `URL received: "${client.cache["webhookURL"]}"` : null
         );
         client.cache["errorHandler"]["webhookState"] = false;
     }

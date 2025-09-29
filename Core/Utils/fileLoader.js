@@ -51,6 +51,9 @@ async function finder(client, resolvedPath) {
 			if (evt.__file === resolvedPath)
 				target = { type: "event", ref: evt, name: event?.name };
 
+	if (resolvedPath === client?.config?.__file)
+		target = { type: "config", ref: client.config, name: "config.json" };
+
 	return (target);
 }
 
@@ -63,6 +66,14 @@ async function reloadFile(client, filePath) {
 
 		await deleteCachedFile(resolvedPath);
 		const reloadedFile = require(resolvedPath);
+
+		if (target.type === "config") {
+			if (typeof reloadedFile !== "object")
+				return showError("RELOADER", `Le fichier ${filePath} n'a pas pu être rechargé.`, "none");
+			client.config = { ...client.config, ...reloadedFile, __file: resolvedPath };
+			return showInfo("RELOADER", `Le fichier ${target.name} (${target.type}) a été rechargé avec succès.`);
+		}
+
 		if (!reloadedFile || typeof reloadedFile !== "object")
 			return showError("RELOADER", `Le fichier ${filePath} n'a pas pu être rechargé.`, "none");
 		if (!reloadedFile.execute || typeof reloadedFile.execute !== "function")
@@ -74,7 +85,7 @@ async function reloadFile(client, filePath) {
 		showError(
 			"RELOADER",
 			`Une erreur est survenue lors du rechargement du fichier: ${filePath}`,
-			client.debugMode ? err.stack : null
+			client.config.debugMode ? err.stack : null
 		)
 	}
 }

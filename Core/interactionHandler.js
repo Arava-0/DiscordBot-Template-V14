@@ -40,7 +40,7 @@ module.exports = {
          * If the bot is in maintenance mode, only developers can interact with the bot.
          * If the user is not a developer, the bot will reply with a maintenance message.
          */
-        if (client.maintenance === true && await isDeveloper(client, interaction.user.id) === false)
+        if (client.config.maintenance === true && await isDeveloper(client, interaction.user.id) === false)
             return await maintenance(interaction);
 
         /**

@@ -44,7 +44,7 @@ function loadEvent(client, loadedFileEvent)
 			});
 		}
 
-		if (client.debugMode)
+		if (client.config.debugMode)
 			showInfo (
 				`➥  EVENT REGISTERED`,
 				`Name: ${loadedFileEvent.name} | Type: ${loadedFileEvent.once ? "once" : "on"}`
@@ -54,7 +54,7 @@ function loadEvent(client, loadedFileEvent)
 		showError (
 			`EVENT FAILED TO LOAD`,
 			`Name: ${loadedFileEvent.name} | ${err}`,
-			client.debugMode == true ? err.stack : null
+			client.config.debugMode == true ? err.stack : null
 		);
 	}
 
@@ -80,7 +80,7 @@ function loadCommand(client, loadedFileCommand)
 			__file: loadedFileCommand.__file
 		})
 
-		if (client.debugMode) {
+		if (client.config.debugMode) {
 			let debug = `Name: ${cmd.name} | Type: ${cmd.constructor.name}`;
 			if (loadedFileCommand.isOnPrivateGuild)
 				debug += ` | Guild: ${loadedFileCommand.isOnPrivateGuild}`;
@@ -92,7 +92,7 @@ function loadCommand(client, loadedFileCommand)
 		showError (
 			`COMMAND FAILED TO LOAD`,
 			`Name: ${loadedFileCommand.data.name} | ${err}`,
-			client.debugMode == true ? err.stack : null
+			client.config.debugMode == true ? err.stack : null
 		);
 	}
 
@@ -124,7 +124,7 @@ function loadItem(client, loadedFile)
 				"none"
 			);
 
-		if (client.debugMode)
+		if (client.config.debugMode)
 			showInfo (
 				`➥  ${type.toUpperCase()} LOADED`,
 				`Name: ${loadedFile.id}`
@@ -134,7 +134,7 @@ function loadItem(client, loadedFile)
 		showError (
 			`${type.toUpperCase()} FAILED TO LOAD`,
 			`Name: ${loadedFile.id} | ${err}`,
-			client.debugMode == true ? err.stack : null
+			client.config.debugMode == true ? err.stack : null
 		);
 	}
 
@@ -185,7 +185,7 @@ async function applyRegisteredEvents(client) {
 
 			if (onceEvents.length > 0) {
 				client.once(eventName, createWrapper(onceEvents));
-				if (client.debugMode) {
+				if (client.config.debugMode) {
 					showInfo(
 						`EVENTS LOADED`,
 						`>> ${onceEvents.length} once event(s) applied for ${eventName}`
@@ -195,7 +195,7 @@ async function applyRegisteredEvents(client) {
 
 			if (onEvents.length > 0) {
 				client.on(eventName, createWrapper(onEvents));
-				if (client.debugMode) {
+				if (client.config.debugMode) {
 					showInfo(
 						`EVENTS LOADED`,
 						`>> ${onEvents.length} on event(s) applied for ${eventName}`
@@ -207,7 +207,7 @@ async function applyRegisteredEvents(client) {
         showError(
             `Failed to apply registered events.`,
             err.message,
-            client.debugMode ? err.stack : null
+            client.config.debugMode ? err.stack : null
         );
     }
 }
@@ -220,7 +220,7 @@ async function loadEverything(client)
 	files.push(interactionHandler);
 
 	files.forEach((file) => {
-		if (client.debugMode)
+		if (client.config.debugMode)
 			showInfo("DEBUG", `Loading file: ${file}`)
 		const loadedFile = require(file);
 
@@ -288,7 +288,7 @@ async function loadEverything(client)
 			showError(
 				`COMMAND FAILED TO LOAD`,
 				`Guild: ${guildID} | ${err}`,
-				client.debugMode == true ? err.stack : null
+				client.config.debugMode == true ? err.stack : null
 			);
 		}
 	});
