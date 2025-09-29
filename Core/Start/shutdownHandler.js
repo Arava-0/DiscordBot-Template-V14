@@ -14,24 +14,28 @@ const { showInfo } = require('../Utils/customInformations');
 
 async function shutdownHandler(client)
 {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+    const isTTY = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    const rl = isTTY
+        ? readline.createInterface({ input: process.stdin, output: process.stdout })
+        : null;
 
-    rl.on('SIGINT', () => {
-        process.emit('SIGINT');
-    });
+    if (rl) {
+        rl.on('SIGINT', () => {
+            process.emit('SIGINT');
+        });
+    }
 
-    process.on('SIGINT', async () => {
-        console.log("\x1b[1m\x1b[38;2;255;0;0mSIGINT signal received...\x1b[0m")
-        if (client.stopped) return;
+    ['SIGTERM', 'SIGINT', 'SIGHUP'].forEach(sig => {
+        process.on(sig, async () => {
+            console.log(`\x1b[1m\x1b[38;2;255;0;0m${sig} signal received...\x1b[0m`)
+            if (client.stopped) return;
 
-        client.stopped = true;
-        await shutdownService(client, "By SIGINT");
-        await sleep(500)
-        rl.close();
-        process.exit(0);
+            client.stopped = true;
+            await shutdownService(client, `By ${sig}`);
+            await sleep(500);
+            if (rl) rl.close();
+            process.exit(0);
+        })
     });
 
     process.on('message', async (msg) => {
@@ -42,7 +46,7 @@ async function shutdownHandler(client)
             client.stopped = true;
             await shutdownService(client, "By PROCESS MESSAGE: 'shutdown'");
             await sleep(500);
-            rl.close();
+            if (rl) rl.close();
             process.exit(0);
         }
     });
