@@ -21,10 +21,16 @@ function collectFilesToWatch(client) {
     return Array.from(files);
 }
 
+function collectConfigFilePath(client) {
+    return client?.config?.__file ? [client.config.__file] : [];
+}
+
 async function startDevWatcher(client) {
     if (!client.devWatcherMode) return;
 
     const filesToWatch = collectFilesToWatch(client);
+    filesToWatch.push(...collectConfigFilePath(client));
+
     if (filesToWatch.length === 0)
         return showInfo("WATCHER", "Aucun fichier à surveiller. Le mode DevWatcher est désactivé.");
 

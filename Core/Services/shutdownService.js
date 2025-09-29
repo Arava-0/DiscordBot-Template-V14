@@ -42,12 +42,12 @@ async function shutdownService(client, shutdownMessage) {
     );
 
     for (const [name, task] of shutdownTasks) {
-        if (client.debugMode)
+        if (client.config.debugMode)
             console.log(`[ShutdownService] Executing task: ${name}`);
         try {
             await task(client);
         } catch (err) {
-            showError('SHUTDOWN', `Error executing task ${name}: ${err}`, client.debugMode == true ? err.stack : null);
+            showError('SHUTDOWN', `Error executing task ${name}: ${err}`, client.config.debugMode == true ? err.stack : null);
         }
     }
 }

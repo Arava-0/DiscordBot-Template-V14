@@ -8,8 +8,9 @@
  */
 
 const { EmbedBuilder, WebhookClient, ActivityType, Colors, Events } = require('discord.js')
-const { showInfo } = require("../Utils/customInformations");
 const { isNullOrUndefined } = require('../Utils/isNullOrUndefined');
+const { showInfo } = require("../Utils/customInformations");
+const path = require('path');
 
 async function initClient(client)
 {
@@ -23,9 +24,10 @@ async function initClient(client)
         modals: [],
     };
 
-    client.config = require('../../config.json');
-    client.debugMode = client.config.debugMode;
-    client.maintenance = client.config.maintenance;
+    const config = require(path.join(process.cwd(), "config.json"));
+    config.__file = path.join(process.cwd(), "config.json");
+    client.config = config;
+
     client.devWatcherMode = process.env.DEV_WATCHER === "true";
     client.cache["webhookURL"] = client.config.webhookURL;
 
@@ -73,8 +75,8 @@ function ready(client)
                 `> - ${client.loader.buttons.length} bouton${client.loader.buttons.length > 1 ? "s" : ""} chargé${client.loader.buttons.length > 1 ? "s" : ""}\n` +
                 `> - ${client.loader.selectMenus.length} menu déroulant${client.loader.selectMenus.length > 1 ? "s" : ""} chargé${client.loader.selectMenus.length > 1 ? "s" : ""}\n` +
                 `> - ${client.loader.modals.length} modal${client.loader.modals.length > 1 ? "s" : ""} chargé${client.loader.modals.length > 1 ? "s" : ""}\n\n` +
-                `> Mode débug: **${client.debugMode ? "Activé" : "Désactivé"}**\n` +
-                `> Maintenance: **${client.maintenance ? "Activée" : "Désactivée"}**`;
+                `> Mode débug: **${client.config.debugMode ? "Activé" : "Désactivé"}**\n` +
+                `> Maintenance: **${client.config.maintenance ? "Activée" : "Désactivée"}**`;
 
             if (webhookInstance) {
                 webhookInstance.edit({
