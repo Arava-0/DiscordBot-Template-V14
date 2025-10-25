@@ -11,6 +11,7 @@ const { EmbedBuilder, WebhookClient, ActivityType, Colors, Events } = require('d
 const { isNullOrUndefined } = require('../Utils/isNullOrUndefined');
 const { showInfo } = require("../Utils/customInformations");
 const path = require('path');
+const { setClient } = require('../Utils/getClient');
 
 async function initClient(client)
 {
@@ -48,6 +49,7 @@ async function initClient(client)
         await guild.channels.fetch();
     }
 
+    setClient(client);
     showInfo("CLIENT", "Client discord initialisé !");
 }
 

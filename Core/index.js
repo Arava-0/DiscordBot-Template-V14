@@ -14,6 +14,7 @@ const isNullOrUndefined = require('./Utils/isNullOrUndefined');
 const parseDiscordName = require('./Utils/parseDiscordName');
 const math = require('./Utils/math');
 const time = require('./Utils/time');
+const { getClient } = require('./Utils/getClient');
 
 // Imports des services
 const presenceService = require('./Services/presenceService');
@@ -38,6 +39,7 @@ module.exports = {
     ...parseDiscordName,
     ...math,
     ...time,
+    getClient,
 
     // Exportation des services
     ...presenceService,
