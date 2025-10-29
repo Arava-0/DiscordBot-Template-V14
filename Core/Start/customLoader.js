@@ -68,6 +68,15 @@ function loadCommand(client, loadedFileCommand)
 	try {
 		let cmd = loadedFileCommand.data;
 
+		if (client.loader.commands.find(c => c.name === cmd.name)) {
+			showError(
+				`DUP COMMAND`,
+				`Name: ${cmd.name} | Type: ${cmd.constructor.name}`,
+				"none"
+			);
+			return false;
+		}
+
 		client.loader.commands.push({
 			name: cmd.name,
 			data: cmd,
@@ -103,6 +112,15 @@ function loadItem(client, loadedFile)
 {
 	const type = loadedFile.type;
 	let success = true;
+
+	if (client.loader[`${type}s`].find(i => i.id === loadedFile.id)) {
+		showError(
+			`DUP ${type.toUpperCase()}`,
+			`ID: ${loadedFile.id}`,
+			"none"
+		);
+		return false;
+	}
 
 	try {
 		const pattern = new RegExp(`^${loadedFile.id.replace(/{!}/g, '([\\w@.#$!,-]+)')}$`);
@@ -222,7 +240,18 @@ async function loadEverything(client)
 	files.forEach((file) => {
 		if (client.config.debugMode)
 			showInfo("DEBUG", `Loading file: ${file}`)
-		const loadedFile = require(file);
+
+		let loadedFile;
+		try {
+			loadedFile = require(file);
+		} catch (err) {
+			showError(
+				`FILE FAILED TO LOAD`,
+				`File: "${file}" | ${err}`,
+				client.config.debugMode == true ? err.stack : null
+			);
+			return;
+		}
 
 		if (isNullOrUndefined(loadedFile) || isNullOrUndefined(loadedFile.type))
 			return;
