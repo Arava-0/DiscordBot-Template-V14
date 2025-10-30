@@ -84,21 +84,21 @@ function ready(client)
                 webhookInstance.edit({
                     name: client.user.username,
                     avatar: client.user.displayAvatarURL({ dynamic: true })
-                }).catch(() => {})
-
-                webhookInstance.send({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setTitle(`${client.user.tag} vient de démarrer !`)
-                            .setDescription(description)
-                            .setColor(Colors.Green)
-                            .setTimestamp()
-                            .setFooter({
-                                text: "Core made by Arava ❤️",
-                                iconURL: client.user.displayAvatarURL({ dynamic: true })
-                            })
-                    ]
-                }).catch(() => {})
+                }).then(() => {
+                    webhookInstance.send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle(`${client.user.tag} vient de démarrer !`)
+                                .setDescription(description)
+                                .setColor(Colors.Green)
+                                .setTimestamp()
+                                .setFooter({
+                                    text: "Core made by Arava ❤️",
+                                    iconURL: client.user.displayAvatarURL({ dynamic: true })
+                                })
+                        ]
+                    }).catch(() => {})
+                }).catch(() => {});
             }
         } catch (e) {}
     }
