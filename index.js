@@ -35,7 +35,7 @@ const client = new Client({
     partials: [User, Message, GuildMember, ThreadMember, Channel, Reaction]
 });
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 client.login(process.env.TOKEN).then(async () => {
     Core.showInfo("LOGIN", "Connexion à l'API Discord réussie | Pseudo: " + client.user.tag);
