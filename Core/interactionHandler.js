@@ -25,6 +25,23 @@ module.exports = {
      * @param {BaseInteraction} interaction
      */
     async execute(client, interaction) {
+
+        const isInMaintenance = (client.config.maintenance === true && await isDeveloper(client, interaction.user.id) === false)
+        const isReady = client.cache && client.cache.ready;
+
+        /**
+         * If the interaction is an autocomplete interaction, the bot will execute it (if it exists).
+         */
+        if (interaction.isAutocomplete() && !isInMaintenance && isReady) {
+            const command = client.loader.commands.find(c => c.name === interaction.commandName);
+
+            if (isNullOrUndefined(command) || typeof command.autocomplete !== "function")
+                return;
+
+            await command.autocomplete(interaction, client);
+            return;
+        }
+
         /**
          * Logs every interaction triggered by a user in the console.
          */
@@ -40,13 +57,13 @@ module.exports = {
          * If the bot is in maintenance mode, only developers can interact with the bot.
          * If the user is not a developer, the bot will reply with a maintenance message.
          */
-        if (client.config.maintenance === true && await isDeveloper(client, interaction.user.id) === false)
+        if (isInMaintenance)
             return await maintenance(interaction);
 
         /**
          * If the bot is not ready, the bot will reply with a starting message.
          */
-        if (!client.cache || !client.cache.ready)
+        if (!isReady)
             return await botStarting(interaction);
 
         /**

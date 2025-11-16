@@ -1,4 +1,4 @@
-const { ChatInputCommandInteraction, SlashCommandBuilder, Client } = require('discord.js');
+const { ChatInputCommandInteraction, SlashCommandBuilder, Client, AutocompleteInteraction } = require('discord.js');
 
 /**
  * @file Command module for a Discord bot using discord.js
@@ -39,6 +39,11 @@ const { ChatInputCommandInteraction, SlashCommandBuilder, Client } = require('di
  *
  * - `execute()`: Asynchronous function that contains the logic to execute when
  *   the command is triggered.
+ *
+ * - `autocomplete()`: Asynchronous function that handles autocomplete interactions
+ *   for the command. If not needed, this function can be omitted.
+ *   You can use autoComplete by setting an option with `.setAutocomplete(true)` in the
+ *   `data` property (!Options are forbidden if you use autocomplete).
  */
 module.exports = {
 
@@ -60,5 +65,12 @@ module.exports = {
      * @param {Client} client
      */
     async execute(interaction, client) {
+    },
+
+    /**
+     * @param {AutocompleteInteraction} interaction
+     * @param {Client} client
+     */
+    async autocomplete(interaction, client) {
     }
 }

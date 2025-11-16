@@ -86,6 +86,7 @@ function loadCommand(client, loadedFileCommand)
 			deferReply: isNullOrUndefined(loadedFileCommand.deferReply) ? false : loadedFileCommand.deferReply,
 			ephemeral: isNullOrUndefined(loadedFileCommand.ephemeral) ? false : loadedFileCommand.ephemeral,
 			execute: loadedFileCommand.execute,
+			autocomplete: typeof loadedFileCommand.autocomplete === "function" ? loadedFileCommand.autocomplete : null,
 			__file: loadedFileCommand.__file
 		})
 

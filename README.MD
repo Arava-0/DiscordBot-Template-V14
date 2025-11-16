@@ -73,6 +73,10 @@ Les commandes slash permettent aux utilisateurs de taper `/commande` dans la bar
   - **`deferReply`** et **`ephemeral`** : Identiques aux commandes contextuelles.
   - **Options des commandes** : Vous pouvez ajouter des paramètres aux commandes via des méthodes comme `.addStringOption()`, permettant d’ajouter des entrées utilisateur.
   - **Cooldowns** : Identiques aux commandes contextuelles.
+  - **Autocomplete** :
+    - Vous pouvez définir une fonction `autocomplete` pour gérer les suggestions dynamiques lors de la saisie des options de la commande.
+    - Utile pour fournir des choix basés sur des données en temps réel.
+    - Vous pouvez utiliser l'autocomplétion en définissant une option avec `.setAutocomplete(true)` dans la propriété `data` (!Les options sont interdites si vous utilisez l'autocomplétion).
 
 ---
 
