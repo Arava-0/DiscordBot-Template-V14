@@ -25,7 +25,11 @@ async function loadFiles(dirName, excludeDirs = []) {
 		let jsfiles = files.filter((file) => path.extname(file) === ".js");
 		await Promise.all(jsfiles.map(deleteCachedFile));
 
+		// Linux compatibility: exclude directories
 		jsfiles = jsfiles.filter((file) => !excludeDirs.some((dir) => file.includes(dir)));
+
+		// Windows compatibility: replace backslashes with forward slashes
+		jsfiles = jsfiles.filter((file) => !excludeDirs.some((dir) => file.replace(/\\/g, "/").includes(dir)));
 
 		return (jsfiles);
 	} catch (err) {
