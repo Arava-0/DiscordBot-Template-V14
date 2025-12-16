@@ -83,7 +83,6 @@ async function reloadFile(client, filePath) {
 		if (!reloadedFile.execute || typeof reloadedFile.execute !== "function")
 			return showError("RELOADER", `Le fichier ${filePath} n'a pas pu être rechargé. (execute missing)`, "none");
 
-		console.log(target.ref);
 		if (target.type === "command") {
 			target.ref.userCooldown = reloadedFile.userCooldown ?? null;
 			target.ref.serverCooldown = reloadedFile.serverCooldown ?? null;
