@@ -83,6 +83,7 @@ function loadCommand(client, loadedFileCommand)
 			isOnPrivateGuild: isNullOrUndefined(loadedFileCommand.isOnPrivateGuild) ? null : loadedFileCommand.isOnPrivateGuild,
 			userCooldown: isNullOrUndefined(loadedFileCommand.userCooldown) ? null : loadedFileCommand.userCooldown,
 			serverCooldown: isNullOrUndefined(loadedFileCommand.serverCooldown) ? null : loadedFileCommand.serverCooldown,
+			globalCooldown: isNullOrUndefined(loadedFileCommand.globalCooldown) ? null : loadedFileCommand.globalCooldown,
 			deferReply: isNullOrUndefined(loadedFileCommand.deferReply) ? false : loadedFileCommand.deferReply,
 			ephemeral: isNullOrUndefined(loadedFileCommand.ephemeral) ? false : loadedFileCommand.ephemeral,
 			execute: loadedFileCommand.execute,
