@@ -5,6 +5,7 @@ module.exports = {
     name : Events.GuildDelete,
     type: "event",
     once: false,
+    priority: 1,
 
     /**
      * @param {Client} client

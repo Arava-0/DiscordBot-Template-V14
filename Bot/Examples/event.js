@@ -36,6 +36,7 @@ module.exports = {
     name: Events.ClientReady,
     type: "event",
     once: true,
+    priority: 1,
 
     /**
      * @param {Client} client
@@ -48,6 +49,7 @@ module.exports = {
     name: Events.GuildMemberAdd,
     type: "event",
     once: false,
+    priority: 1,
 
     /**
      * @param {Client} client
@@ -61,6 +63,7 @@ module.exports = {
     name: Events.VoiceStateUpdate,
     type: "event",
     once: false,
+    priority: 1,
 
     /**
      * @param {Client} client
