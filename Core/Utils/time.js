@@ -27,10 +27,14 @@ async function isValidDate(year, month, day) {
     const errorList = [];
     const date = new Date(year, month - 1, day);
 
-    if (month < 1 || month > 12)
-        errorList.push(`Le mois doit être compris entre 1 et 12.`);
-    if (date.getDate() !== day)
+    if (month < 1 || month > 12) {
+        errorList.push("Le mois doit être compris entre 1 et 12.");
+        return errorList;
+    }
+
+    if (date.getDate() != day)
         errorList.push(`Le jour doit être compris entre 1 et ${new Date(year, month, 0).getDate()}.`);
+
     return (errorList);
 }
 
